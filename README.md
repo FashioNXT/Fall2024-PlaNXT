@@ -1,11 +1,11 @@
 # CSCE606 - Project PlaNXT
 
-Team Spring 2024  
+Team Fall 2024  
 
 
-Spring 2024 Heroku link: https://planxt.herokuapp.com  
+Fall 2024 Heroku link: https://planxt.herokuapp.com  
 
-Spring 2024 PlaNXT code climate report: https://codeclimate.com/github/CSCE-606-Event360/Spring2024-PlaNXT  
+Fall 2024 PlaNXT code climate report: https://codeclimate.com/github/CSCE-606-Event360/Spring2024-PlaNXT  
 
 
 

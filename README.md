@@ -17,8 +17,8 @@ Fall 2024 PlaNXT code climate report: https://codeclimate.com/github/CSCE-606-Ev
 ## Get Started
 ```
 ## Clone the repository 
-git clone https://github.com/CSCE-606-Event360/Fall2023-PlaNXT.git
-cd Fall2023-PlaNXT
+git clone https://github.com/CSCE-606-Event360/Fall2024-PlaNXT.git
+cd Fall2024-PlaNXT
 ```
 ### Setup the environment 
 Verify you have Ruby, Rails, and Heroku CLI installed

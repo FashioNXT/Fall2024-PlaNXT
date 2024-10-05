@@ -28,7 +28,28 @@ Meet every day, have more in-depth conversations on Monday and Wednesday in clas
 - Sprint Planning Meetings - Bi-weekly - Friday at 4 PM after Sprint Retrospective
 
 #### Team Approach to work
-Key phrase: Collaboration and communication. The most important for our team will be to communicate and and make sure that everyone is always on the same page about the project. Additionally, we will maintain a equal culture where everyone's opinion is valuable and we want everyone to pitch ideas and communicate their issues because we need unanimous agreement about the direction we are taking. 
+
+**Collaboration and communication**
+The most important for our team will be to 
+communicate and and make sure that everyone is always on the same page about the project. 
+Additionally, we will maintain a equal culture where everyone's opinion is valuable and we 
+want everyone to pitch ideas and communicate their issues because we need unanimous agreement 
+about the direction we are taking. We will also be prompt in our communication and strive to 
+respond to each others' questions and concerns in a quick and timely manner. 
+
+**Documentation**
+We aim to document everything we do. The agile methodology of user stories and the usage of 
+Pivotal Tracker already ensures documentation of small steps and features, but we also want 
+to make note of any important information we find during our work. This is especially important
+because of the rotating of roles. Since each member will work as a scrum master, product owner,
+and developer throughout the course of the project, the transfer of roles needs to be seamless.
+Therefore, each member will document their experience in their role and conduct a written and 
+verbal knowledge transfer to other members when roles are rotated.  
+
+**Development**
+Our approach to development will be highly behavior driven. The most important outcome is to satisfy
+the client's needs, and the best way to do so is by habving thorough cucumber scenarios reflecting 
+client needs and developing solutions in order to pass those cucumber scenraios.
 
 #### Communication Channels
 Slack for communication, Google Meet and Zoom for virtual meetings.

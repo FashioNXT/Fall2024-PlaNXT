@@ -7,6 +7,8 @@
 # files.
 
 require 'cucumber/rails'
+# require 'selenium-webdriver'
+# require 'webdrivers'
 
 # By default, any exception happening in your Rails application will bubble up
 # to Cucumber so that your scenario will fail. This is a different from how
@@ -24,6 +26,18 @@ require 'cucumber/rails'
 # recommended as it will mask a lot of errors for you!
 #
 ActionController::Base.allow_rescue = false
+
+# Capybara.register_driver :selenium do |app|
+#   options = Selenium::WebDriver::Chrome::Options.new
+#   options.add_argument('--headless')  # Optional
+#   options.add_argument('--disable-gpu')
+#   options.add_argument('--no-sandbox')
+#   options.add_argument('--disable-dev-shm-usage')
+
+#   Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
+# end
+
+# Capybara.default_driver = :selenium
 
 # Remove/comment out the lines below if your app doesn't have a database.
 # For some databases (like MongoDB and CouchDB) you may need to use :truncation instead.

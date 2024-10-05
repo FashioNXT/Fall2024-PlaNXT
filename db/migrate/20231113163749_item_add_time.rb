@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# This is the Migration
 class ItemAddTime < ActiveRecord::Migration[7.0]
   def change
     add_column :items, :start_time, :time

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# This is the Migration
 class UpdateTime < ActiveRecord::Migration[7.0]
   def change
     remove_column :steps, :start_time

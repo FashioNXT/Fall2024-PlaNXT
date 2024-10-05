@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# This is the Migration
 class AddItemTable < ActiveRecord::Migration[7.0]
   def change
     create_table :items do |t|

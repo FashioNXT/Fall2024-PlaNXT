@@ -83,6 +83,25 @@ After moving chromedriver in the **/usr/local/bin** dir, one can start running t
 
 2. Add the path in the Environment Variables
     
+3. Add the following code in support/env.rb file
+
+```
+require 'selenium-webdriver'
+require 'webdrivers' 
+
+
+Capybara.register_driver :selenium do |app|
+  options = Selenium::WebDriver::Chrome::Options.new
+  options.add_argument('--headless')  # Optional
+  options.add_argument('--disable-gpu')
+  options.add_argument('--no-sandbox')
+  options.add_argument('--disable-dev-shm-usage')
+
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
+end
+
+Capybara.default_driver = :selenium
+```
     
 ##### Step 3
 run cucumber test

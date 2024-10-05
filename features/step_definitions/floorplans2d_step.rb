@@ -103,6 +103,3 @@ Then('I should receive a downloaded CSV file') do
   expect(Dir.glob("#{download_path}/*.csv").any?).to be true
   # Further checks can be added here as needed
 end
-  
-  
-  

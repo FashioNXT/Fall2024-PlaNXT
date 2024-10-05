@@ -7,7 +7,7 @@ Fall 2024 Heroku link: https://planxt.herokuapp.com
 
 Fall 2024 PlaNXT code climate report: https://codeclimate.com/github/CSCE-606-Event360/Fall2024-PlaNXT  
 
-
+[Team Working Agreement](TWA.md)
 
 
 

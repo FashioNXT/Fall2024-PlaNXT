@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.feature 'Logout', type: :feature do
@@ -12,4 +14,3 @@ RSpec.feature 'Logout', type: :feature do
     expect(page).to have_current_path('https://events360.herokuapp.com/logout')
   end
 end
-

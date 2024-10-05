@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe ApplicationController, type: :controller do
@@ -5,12 +7,12 @@ RSpec.describe ApplicationController, type: :controller do
     before_action :require_user_logged_in!
 
     def index
-      render plain: "Hello"
+      render plain: 'Hello'
     end
   end
 
   let(:user) do
-    User.create(name: "Any Name", email: 'any@email.com', password: 'password', password_confirmation: 'password')
+    User.create(name: 'Any Name', email: 'any@email.com', password: 'password', password_confirmation: 'password')
   end
 
   describe '#require_user_logged_in!' do

@@ -1,11 +1,12 @@
+# frozen_string_literal: true
+
 class PlansController < ApplicationController
   require 'csv'
 
+  before_action :set_plan, only: %i[show edit update destroy]
 
-  before_action :set_plan, only: %i[ show edit update destroy ]
-  
   before_action :require_user_logged_in!, unless: -> { !Rails.env.production? }
-  
+
   # def user_plans
   #   @user = User.from_omniauth(request.env['omniauth.auth'])
   #   @plans = @user.plans
@@ -19,7 +20,7 @@ class PlansController < ApplicationController
       file_contents = uploaded_file.read
       CSV.parse(file_contents, headers: true) do |row|
         # Extract plan attributes from the CSV row
-        plan_attributes = row["Plan attributes"].split(", ")
+        plan_attributes = row['Plan attributes'].split(', ')
         plan_params = {
           name: plan_attributes[1],
           owner: plan_attributes[2],
@@ -30,7 +31,7 @@ class PlansController < ApplicationController
         @plan = Plan.new(plan_params)
         if @plan.save
           # Extract item attributes from the CSV row and associate them with the plan
-          item_attributes = row["Item attributes"].split(", ")
+          item_attributes = row['Item attributes'].split(', ')
           item_params = {
             name: item_attributes[1],
             model: item_attributes[2],
@@ -60,12 +61,12 @@ class PlansController < ApplicationController
 
   def generate_floorplan(plan)
     # Extract plan dimensions
-    venue_length = plan.venue_length
-    venue_width = plan.venue_width
-  
+    plan.venue_length
+    plan.venue_width
+
     # Extract item positions and dimensions
     items = plan.items
-    item_data = items.map do |item|
+    items.map do |item|
       {
         name: item.name,
         model: item.model,
@@ -79,9 +80,8 @@ class PlansController < ApplicationController
       }
     end
   end
-  
-  
-  layout "layouts/empty", only: [:new] 
+
+  layout 'layouts/empty', only: [:new]
 
   # GET /plans or /plans.json
   def index
@@ -102,13 +102,12 @@ class PlansController < ApplicationController
   end
 
   # GET /plans/1/edit
-  def edit
-  end
+  def edit; end
 
   def floorplans2d
     @plan = Plan.find(params[:id])
   end
-  
+
   def preview3d
     snapshot_data_json = params[:snapshot_data]
     snapshot_data = JSON.parse(snapshot_data_json)
@@ -117,40 +116,40 @@ class PlansController < ApplicationController
     json_content = JSON.parse(File.read(Rails.root.join('lib', 'design.room3d')))
 
     # Update the corners of the floorplan
-    json_content["floorplan"]["corners"] = {
-      "7922010e-f5f3-2e53-46f4-3819ea8cdc12" => {
-        "x" => 0,
-        "y" => 0,
+    json_content['floorplan']['corners'] = {
+      '7922010e-f5f3-2e53-46f4-3819ea8cdc12' => {
+        'x' => 0,
+        'y' => 0
       },
-      "a8b17dd7-026c-de11-3077-01a169d1b795" => {
-        "x" => snapshot_data["venue_width"] * scaler,
-        "y" => 0,
+      'a8b17dd7-026c-de11-3077-01a169d1b795' => {
+        'x' => snapshot_data['venue_width'] * scaler,
+        'y' => 0
       },
-      "8039b51e-5a0b-8843-3129-32e647a42002" => {
-        "x" => 0,
-        "y" => snapshot_data["venue_length"] * scaler,
+      '8039b51e-5a0b-8843-3129-32e647a42002' => {
+        'x' => 0,
+        'y' => snapshot_data['venue_length'] * scaler
       },
-      "8a66d562-2eb4-2147-763c-7962e4208a0a" => {
-        "x" => snapshot_data["venue_width"] * scaler,
-        "y" => snapshot_data["venue_length"] * scaler,
+      '8a66d562-2eb4-2147-763c-7962e4208a0a' => {
+        'x' => snapshot_data['venue_width'] * scaler,
+        'y' => snapshot_data['venue_length'] * scaler
       }
     }
 
     # Add items to the floorplan
-    snapshot_data["items"].each do |item, values|
-      json_content["items"].append({
-        "item_name" => values["item_name"],
-        "item_type" => values["item_type"],
-        "model_url" => values["item_model"],
-        "xpos" => values["item_xpos"] * scaler,
-        "ypos" => 0,
-        "zpos" => values["item_zpos"] * scaler,
-        "rotation" => 0,
-        "scale_x" => 1,
-        "scale_y" => 1,
-        "scale_z" => 1,
-        "fixed" => false
-      })
+    snapshot_data['items'].each_value do |values|
+      json_content['items'].append({
+                                     'item_name' => values['item_name'],
+                                     'item_type' => values['item_type'],
+                                     'model_url' => values['item_model'],
+                                     'xpos' => values['item_xpos'] * scaler,
+                                     'ypos' => 0,
+                                     'zpos' => values['item_zpos'] * scaler,
+                                     'rotation' => 0,
+                                     'scale_x' => 1,
+                                     'scale_y' => 1,
+                                     'scale_z' => 1,
+                                     'fixed' => false
+                                   })
     end
 
     # Write the updated information to a JSON file stored in the public folder called "floorplan.json"
@@ -164,7 +163,7 @@ class PlansController < ApplicationController
     @plan = Plan.new(plan_params)
     respond_to do |format|
       if @plan.save
-        format.html { redirect_to plans_path, notice: "Plan was successfully created." }
+        format.html { redirect_to plans_path, notice: 'Plan was successfully created.' }
       else
         # If the plan cannot be saved due to invalid parameters, render the new template
         format.html { render :new }
@@ -183,23 +182,23 @@ class PlansController < ApplicationController
   end
 
   def update_plan_with_steps
-    if plan_params[:steps_attributes].nil?
-      return @plan.update(plan_params)
-    end
+    return @plan.update(plan_params) if plan_params[:steps_attributes].nil?
+
     steps_attributes = plan_params[:steps_attributes].to_unsafe_h
 
-    steps_attributes.each do |key, step_params|
+    steps_attributes.each_value do |step_params|
       %i[start_time end_time break1_start_time break1_end_time break2_start_time break2_end_time].each do |attr|
         step_params[attr] = combine_date_and_time(step_params[:start_date], step_params[attr])
       end
     end
 
-    @plan.update(plan_params.merge(steps_attributes: steps_attributes))
+    @plan.update(plan_params.merge(steps_attributes:))
   end
 
   def combine_date_and_time(date, time)
     return nil if date.blank? || time.blank?
-    DateTime.parse("#{date} #{time} #{Time.zone.now.strftime("%Z")}")
+
+    DateTime.parse("#{date} #{time} #{Time.zone.now.strftime('%Z')}")
   end
 
   # DELETE /plans/1 or /plans/1.json
@@ -207,65 +206,61 @@ class PlansController < ApplicationController
     @plan.destroy
 
     respond_to do |format|
-      format.html { redirect_to plans_url, notice: "Plan was successfully destroyed." }
+      format.html { redirect_to plans_url, notice: 'Plan was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
 
-
   # Method to download all plan and item data as a CSV file
   def download_all_data
     @plans = Plan.includes(steps: :items).all
-  
+
     # initiate a hash
     item_counts = Hash.new(0)
-  
+
     # Generate CSV with plan and item data
     csv_data = CSV.generate(headers: true) do |csv|
       # Define headers
-      csv << ['Plan ID', 'Plan Name', 'Venue Length', 'Venue Width', 'Plan Created At', 'Plan Updated At', 'Timezone', 
+      csv << ['Plan ID', 'Plan Name', 'Venue Length', 'Venue Width', 'Plan Created At', 'Plan Updated At', 'Timezone',
               'Step ID', 'Step Start Time', 'Step End Time', 'Step Break1 Start Time', 'Step Break1 End Time', 'Step Break2 Start Time', 'Step Break2 End Time',
               'Item Name', 'Item Model', 'Item Width', 'Item Length', 'Item Depth', 'Item Rotation', 'Item X Position', 'Item Y Position', 'Item Z Position',
               'Item Setup Start Time', 'Item Setup End Time', 'Item Breakdown Start Time', 'Item Breakdown End Time']
-  
+
       @plans.each do |plan|
         plan.steps.each do |step|
           step.items.each do |item|
-            
-            csv << [plan.id, plan.name, plan.venue_length, plan.venue_width, plan.created_at, plan.updated_at, plan.timezone, 
+            csv << [plan.id, plan.name, plan.venue_length, plan.venue_width, plan.created_at, plan.updated_at, plan.timezone,
                     step.id, step.start_time, step.end_time, step.break1_start_time, step.break1_end_time, step.break2_start_time, step.break2_end_time,
                     item.name, item.model, item.width, item.length, item.depth, item.rotation, item.xpos, item.ypos, item.zpos,
                     item.setup_start_time, item.setup_end_time, item.breakdown_start_time, item.breakdown_end_time]
-  
+
             # summarize the amout of item
             item_counts[item.name] += 1
           end
         end
       end
-  
+
       csv << []
       csv << ['Item Name', 'Count']
       item_counts.each do |name, count|
         csv << [name, count]
       end
     end
-  
+
     send_data csv_data, filename: "plans_and_items_#{Date.today}.csv"
   end
-  
-
-  
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_plan
-      @plan = Plan.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def plan_params
-      # params.require(:plan).permit(:name, :owner, :venue_length, :venue_width, :user_email, steps_attributes: [:id, :start_date, :start_time, :end_time, :break1_start_time, :break1_end_time, :break2_start_time, :break2_end_time, :_destroy])
-      params.require(:plan).permit(:name, :owner, :timezone, :venue_length, :venue_width, steps_attributes: [:id, :start_date, :start_time, :end_time, :break1_start_time, :break1_end_time, :break2_start_time, :break2_end_time, :_destroy])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_plan
+    @plan = Plan.find(params[:id])
+  end
 
+  # Only allow a list of trusted parameters through.
+  def plan_params
+    # params.require(:plan).permit(:name, :owner, :venue_length, :venue_width, :user_email, steps_attributes: [:id, :start_date, :start_time, :end_time, :break1_start_time, :break1_end_time, :break2_start_time, :break2_end_time, :_destroy])
+    params.require(:plan).permit(:name, :owner, :timezone, :venue_length, :venue_width,
+                                 steps_attributes: %i[id start_date start_time end_time break1_start_time break1_end_time break2_start_time break2_end_time _destroy])
+  end
 end

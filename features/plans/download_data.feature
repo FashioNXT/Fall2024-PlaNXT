@@ -1,3 +1,5 @@
+@javascript
+
 Feature: Download Floor Plan as CSV
     As a PlanXT user,
     So that I can easily interpret and utilize the floorplan setups outside the application,

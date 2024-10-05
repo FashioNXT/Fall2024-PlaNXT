@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe BlueprintsController, type: :controller do
-  describe "GET #index" do
+  describe 'GET #index' do
     let(:sample_json) do
       {
         "floorplan": {
@@ -15,7 +17,7 @@ RSpec.describe BlueprintsController, type: :controller do
           "newFloorTextures": {}
         },
         "items": [
-          { "item_name": "Red Chair", "xpos": 65.5, "ypos": 0, "zpos": 143.5 }
+          { "item_name": 'Red Chair', "xpos": 65.5, "ypos": 0, "zpos": 143.5 }
         ]
       }.to_json
     end
@@ -26,22 +28,22 @@ RSpec.describe BlueprintsController, type: :controller do
       get :index
     end
 
-    it "reads the floorplan.json file" do
+    it 'reads the floorplan.json file' do
       expect(File).to have_received(:read).with(file_path)
     end
 
-    it "assigns the parsed JSON to @snapshot" do
+    it 'assigns the parsed JSON to @snapshot' do
       expected_data = JSON.parse(sample_json)
       expect(assigns(:snapshot)).to eq(expected_data)
     end
 
-    it "correctly parses the corners from the floorplan" do
+    it 'correctly parses the corners from the floorplan' do
       snapshot = assigns(:snapshot)
-      expect(snapshot["floorplan"]["corners"]).to have_key("corner1")
-      expect(snapshot["floorplan"]["corners"]).to have_key("corner2")
+      expect(snapshot['floorplan']['corners']).to have_key('corner1')
+      expect(snapshot['floorplan']['corners']).to have_key('corner2')
     end
 
-    it "renders the index template" do
+    it 'renders the index template' do
       expect(response).to render_template(:index)
     end
   end

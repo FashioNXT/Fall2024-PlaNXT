@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateUsers < ActiveRecord::Migration[7.0]
   def change
     create_table :users do |t|
@@ -12,7 +14,7 @@ class CreateUsers < ActiveRecord::Migration[7.0]
       t.string :extra2
       t.string :extra3
       t.boolean :enabled, default: true
-      t.index [:email], name: "index_users_on_email"
+      t.index [:email], name: 'index_users_on_email'
       t.timestamps
     end
   end

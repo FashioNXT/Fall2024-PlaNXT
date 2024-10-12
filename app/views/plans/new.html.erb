@@ -5,28 +5,26 @@
       <div class="card-body custom-card-body">
         <p>Welcome to PLANXT, a tool to set up an event venue – all furniture and staff placements chronologically, and track the actual setup progress real-time. Let’s get started..</p>
 
-  
         <div class="form-group justify-content-md-center" style="display:flex">
           <label class="col-form-label"><b>Plan Name</b></label>
           <div class="col-sm-4" style="margin-left: 1em;">
             <%= form.text_field :name, class: "form-control", id: "Plan Name", placeholder: "Enter plan name" %>
           </div>
         </div>
-        
 
         <div class="justify-content-md-center" style="display:flex; margin: 1em">
-          <h5 style="margin-right: 2em"> Dimensions of the Venue (approximate):</h5>
-          <h5> Length:</h5>
+          <label class="col-form-label" style="margin-right: 2em;">Dimensions of the Venue (approximate):</label>
+          <label class="col-form-label">Length (inches):</label>
           <div class="col-sm-2" style="margin: 0 1em">
-            <%= form.text_field :venue_length, class: "form-control", id: "Venue Length", placeholder: "Length" %>
+            <%= form.text_field :venue_length, class: "form-control", id: "Venue Length", placeholder: "Enter length in inches" %>
           </div>
-          <h5> Width:</h5>
+          <label class="col-form-label">Width (inches):</label>
           <div class="col-sm-2" style="margin-left: 1em">
-            <%= form.text_field :venue_width, class: "form-control", id: "Venue Width", placeholder: "Width" %>
-            <!--#create hidden field for owner where value = session[:user_email] -->
+            <%= form.text_field :venue_width, class: "form-control", id: "Venue Width", placeholder: "Enter width in inches" %>
             <%= form.hidden_field :owner, value: session[:user_email] %>
           </div>
         </div>
+
 
         <div class="button-container">
           <%= form.submit "Create", class: "btn btn-primary", style:"margin-right: 1em; background-color:#478ac9" %>
@@ -42,11 +40,8 @@
     margin-bottom: 1rem;
   }
 
-  h5 {
-    margin: 0px;
-    display: flex;
-    align-items: center; /* Vertical alignment */
-    justify-content: center; /* Horizontal alignment, if needed */
+  .col-form-label {
+    font-size: inherit; /* Ensure all labels have the same font size */
   }
 
   /* Custom CSS class for the card container */
@@ -87,6 +82,14 @@
     font-size: 0.8rem;
     padding: 2px;
   }
+
+  .form-text {
+    font-size: 1rem;
+  }
+  
+  .form-control::placeholder {
+  font-size: 0.8rem;
+  color: #999;
+}
+
 </style>
-
-

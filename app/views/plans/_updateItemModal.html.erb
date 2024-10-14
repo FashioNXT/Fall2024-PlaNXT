@@ -178,19 +178,5 @@
         });
     }
 
-    function parseDateTime(isoDatetime, noSeconds=false){
-        if(isoDatetime == null){
-            return null;
-        }
-        let date = new Date(isoDatetime);
-
-        let dateTimeStr = date.toISOString().replace('T', ' ').slice(0, 19);
-
-        if(noSeconds){
-            dateTimeStr = dateTimeStr.slice(0, 16);
-        }
-        return dateTimeStr;
-    }
-
 </script>
 

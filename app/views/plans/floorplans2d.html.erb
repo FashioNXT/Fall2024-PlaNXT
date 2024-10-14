@@ -93,7 +93,7 @@
                       <% start_minutes = step.start_time.hour * 60 + step.start_time.min %>
                       <% end_minutes = step.end_time.hour * 60 + step.end_time.min %>
                       <% start_date =  step.start_date%>
-                      <button class="dropdown-item" type="button" data-id=<%= step.id %> data-start="<%= start_minutes %>" data-end="<%= end_minutes %>" data-start-time="<%= step.start_time%>">
+                      <button class="dropdown-item" type="button" data-id=<%= step.id %> data-start="<%= start_minutes %>" data-end="<%= end_minutes %>" data-start-time="<%= step.start_time%>" data-end-time="<%= step.end_time %>" data-break1-start-time="<%= step.break1_start_time %>" data-break1-end-time="<%= step.break1_end_time %>" data-break2-start-time="<%= step.break2_start_time %>" data-break2-end-time="<%= step.break2_end_time %>"">
                         <%= step.start_time.strftime('%Y-%m-%d %H:%M') + "~" + step.end_time.strftime('%H:%M') %>
                       </button>
                     <% end %>
@@ -140,6 +140,71 @@
 <%= javascript_include_tag "items" %>
 
 <script>
+  // Declare global variables to store the selected item and time values
+  let selectedItem = null;
+  let setupStartTime = null;
+  let setupEndTime = null;
+  let break1StartTime = null;
+  let break1EndTime = null;
+  let break2StartTime = null;
+  let break2EndTime = null;
+
+  function parseDateTime(isoDatetime, noSeconds=false){
+    if(isoDatetime == null){
+        return null;
+    }
+    let date = new Date(isoDatetime);
+
+    let dateTimeStr = date.toISOString().replace('T', ' ').slice(0, 19);
+
+    if(noSeconds){
+        dateTimeStr = dateTimeStr.slice(0, 16);
+    }
+    return dateTimeStr;
+  }
+
+  // Function to extract times from the selected item
+  function extractTimeValues() {
+    if (selectedItem) {
+      // Extract times from data attributes of the selected dropdown item
+      setupStartTime = selectedItem.getAttribute('data-start-time');
+      setupEndTime = selectedItem.getAttribute('data-end-time');
+      break1StartTime = selectedItem.getAttribute('data-break1-start-time');
+      break1EndTime = selectedItem.getAttribute('data-break1-end-time');
+      break2StartTime = selectedItem.getAttribute('data-break2-start-time');
+      break2EndTime = selectedItem.getAttribute('data-break2-end-time');
+    }
+  }
+
+  // Initialize the dropdown item selection logic
+  function initComboBox() {
+    // Set initial values from the first item in the dropdown (if it exists)
+    const dropdownItems = document.querySelectorAll('.dropdown-item');
+    if (dropdownItems.length > 0) {
+      selectedItem = dropdownItems[0];
+      extractTimeValues(); // Extract values for the first item by default
+    }
+
+    // Add event listeners to each dropdown item
+    dropdownItems.forEach(item => {
+      item.addEventListener('click', function () {
+        // Set the selected item when clicked
+        selectedItem = this;
+
+        // Extract values whenever a new item is selected
+        extractTimeValues();
+
+        // Optionally, update the input field with the selected value
+        document.getElementById('combobox').value = selectedItem.textContent.trim();
+      });
+    });
+  }
+
+  // Call initComboBox when DOM is fully loaded
+  document.addEventListener('DOMContentLoaded', function () {
+    initComboBox();
+  });
+
   (function() {
     var ratio = 1;
     var currentStep = -1;

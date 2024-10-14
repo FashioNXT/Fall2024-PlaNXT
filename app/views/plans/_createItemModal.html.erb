@@ -89,11 +89,10 @@
         document.getElementById('createItemWidth').value = item.width;
         document.getElementById('createItemDepth').value = item.depth;
         document.getElementById('createItemRotation').value = 0;
-        document.getElementById('createItemSetupStartTime').value = null;
-        document.getElementById('createItemSetupEndTime').value = null;
-        document.getElementById('createItemBreakdownStartTime').value = null;
-        document.getElementById('createItemBreakdownEndTime').value = null;
-
+        document.getElementById('createItemSetupStartTime').value = parseDateTime(setupStartTime);
+        document.getElementById('createItemSetupEndTime').value = parseDateTime(setupEndTime);
+        document.getElementById('createItemBreakdownStartTime').value = parseDateTime(setupStartTime);
+        document.getElementById('createItemBreakdownEndTime').value = parseDateTime(setupEndTime);
 
         // Set the onclick function for the confirm button
         document.getElementById('confirmCreateBtn').onclick = function() {

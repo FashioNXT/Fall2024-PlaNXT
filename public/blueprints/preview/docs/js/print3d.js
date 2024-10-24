@@ -46110,6 +46110,12 @@ var Model = function(textureDir) {
 
   // Added by Govind
   this.loadFromObject = (obj) => {
+
+	timelineBar = document.getElementById('timeline-bar-3d');
+	timelineBar.setAttribute('min', 0);
+	timelineBar.setAttribute('max', 100);
+	timelineBar.setAttribute('value', 10);
+
 	this.roomLoadedCallbacks.fire()
 	scope.newRoom(
 		obj.floorplan,
@@ -48379,7 +48385,8 @@ var ThreeMain = function(model, element, canvasElement, opts) {
 
     var skybox = new ThreeSkybox(scene);
 
-    scope.controls = new ThreeControls(camera, domElement);
+	console.log(renderer.domElement);
+    scope.controls = new ThreeControls(camera, renderer.domElement);
 
     hud = new ThreeHUD(scope);
 

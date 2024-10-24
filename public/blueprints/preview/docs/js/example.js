@@ -469,34 +469,19 @@ var mainControls = function(room3d) {
   var room3d = room3d;
 
   function newDesign() {
-    room3d.model.loadSerialized('{"floorplan":{"corners":{"f90da5e3-9e0e-eba7-173d-eb0b071e838e":{"x":204.85099999999989,"y":289.052},"da026c08-d76a-a944-8e7b-096b752da9ed":{"x":672.2109999999999,"y":289.052},"4e3d65cb-54c0-0681-28bf-bddcc7bdb571":{"x":672.2109999999999,"y":-178.308},"71d4f128-ae80-3d58-9bd2-711c6ce6cdf2":{"x":204.85099999999989,"y":-178.308}},"walls":[{"corner1":"71d4f128-ae80-3d58-9bd2-711c6ce6cdf2","corner2":"f90da5e3-9e0e-eba7-173d-eb0b071e838e","frontTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0},"backTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0}},{"corner1":"f90da5e3-9e0e-eba7-173d-eb0b071e838e","corner2":"da026c08-d76a-a944-8e7b-096b752da9ed","frontTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0},"backTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0}},{"corner1":"da026c08-d76a-a944-8e7b-096b752da9ed","corner2":"4e3d65cb-54c0-0681-28bf-bddcc7bdb571","frontTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0},"backTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0}},{"corner1":"4e3d65cb-54c0-0681-28bf-bddcc7bdb571","corner2":"71d4f128-ae80-3d58-9bd2-711c6ce6cdf2","frontTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0},"backTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0}}],"wallTextures":[],"floorTextures":{},"newFloorTextures":{}},"items":[]}');
+    
   }
 
   function loadDesign() {
-    files = $("#loadFile").get(0).files;
-    var reader  = new FileReader();
-    reader.onload = function(event) {
-        var data = event.target.result;
-        room3d.model.loadSerialized(data);
-    }
-    reader.readAsText(files[0]);
+
   }
 
   function saveDesign() {
-    var data = room3d.model.exportSerialized();
-    var a = window.document.createElement('a');
-    var blob = new Blob([data], {type : 'text'});
-    a.href = window.URL.createObjectURL(blob);
-    a.download = 'design.room3d';
-    document.body.appendChild(a)
-    a.click();
-    document.body.removeChild(a)
+
   }
 
   function init() {
-    $("#new").click(newDesign);
-    $("#loadFile").change(loadDesign);
-    $("#saveFile").click(saveDesign);
+
   }
 
   init();
@@ -528,15 +513,15 @@ $(document).ready(function() {
   // This serialization format needs work
   // Load a simple rectangle room
 
-  function loadDesign() {
-    files = $("#loadFile").get(0).files;
-    var reader = new FileReader();
-    reader.onload = function (event) {
-      var data = event.target.result;
-      room3d.model.loadSerialized(data);
-    };
-    reader.readAsText(files[0]);
-  }
+  // function loadDesign() {
+  //   files = $("#loadFile").get(0).files;
+  //   var reader = new FileReader();
+  //   reader.onload = function (event) {
+  //     var data = event.target.result;
+  //     room3d.model.loadSerialized(data);
+  //   };
+  //   reader.readAsText(files[0]);
+  // }
 
   function convertRubyHashToJSON(rubyHashString) {
     // Replace => with :
@@ -551,172 +536,12 @@ $(document).ready(function() {
     return jsonString;
   }
 
-  data = `{
-    "floorplan": {
-      "corners": {
-        "5e41ae41-49ab-0dad-8f5d-41e7591a8253": {
-          "x": 294.64,
-          "y": -225.04399999999998
-        },
-        "3c17f7d0-358c-5dda-f8a6-bf18f101f07e": {
-          "x": 1044.702,
-          "y": -225.04399999999998
-        },
-        "4f2ebf96-e96e-d1f3-9b88-ff6a879e7019": {
-          "x": 294.64,
-          "y": 232.664
-        },
-        "ca981c17-0d4d-e834-f2f3-300ba7c645bb": {
-          "x": 1044.702,
-          "y": 232.664
-        }
-      },
-      "walls": [
-        {
-          "corner1": "5e41ae41-49ab-0dad-8f5d-41e7591a8253",
-          "corner2": "4f2ebf96-e96e-d1f3-9b88-ff6a879e7019",
-          "frontTexture": {
-            "url": "rooms/textures/wallmap.png",
-            "stretch": true,
-            "scale": 0
-          },
-          "backTexture": {
-            "url": "https://blueprint-dev.s3.amazonaws.com/uploads/floor_wall_texture/file/wallmap_yellow.png",
-            "stretch": true,
-            "scale": null
-          }
-        },
-        {
-          "corner1": "ca981c17-0d4d-e834-f2f3-300ba7c645bb",
-          "corner2": "3c17f7d0-358c-5dda-f8a6-bf18f101f07e",
-          "frontTexture": {
-            "url": "rooms/textures/wallmap.png",
-            "stretch": true,
-            "scale": 0
-          },
-          "backTexture": {
-            "url": "https://blueprint-dev.s3.amazonaws.com/uploads/floor_wall_texture/file/light_brick.jpg",
-            "stretch": false,
-            "scale": 100
-          }
-        },
-        {
-          "corner1": "5e41ae41-49ab-0dad-8f5d-41e7591a8253",
-          "corner2": "3c17f7d0-358c-5dda-f8a6-bf18f101f07e",
-          "frontTexture": {
-            "url": "rooms/textures/wallmap.png",
-            "stretch": true,
-            "scale": 0
-          },
-          "backTexture": {
-            "url": "rooms/textures/wallmap.png",
-            "stretch": true,
-            "scale": 0
-          }
-        },
-        {
-          "corner1": "4f2ebf96-e96e-d1f3-9b88-ff6a879e7019",
-          "corner2": "ca981c17-0d4d-e834-f2f3-300ba7c645bb",
-          "frontTexture": {
-            "url": "rooms/textures/wallmap.png",
-            "stretch": true,
-            "scale": 0
-          },
-          "backTexture": {
-            "url": "rooms/textures/wallmap.png",
-            "stretch": true,
-            "scale": 0
-          }
-        }
-      ],
-      "wallTextures": [],
-      "floorTextures": {},
-      "newFloorTextures": {}
-    },
-    "items": [
-      {
-        "item_name": "Media Console",
-        "item_type": 1,
-        "model_url": "models/js/media.js",
-        "xpos": 636.467945801762,
-        "ypos": 67.88999754395999,
-        "zpos": -121.8183670462854,
-        "rotation": -0.8154,
-        "scale_x": 1,
-        "scale_y": 1,
-        "scale_z": 1,
-        "fixed": false
-      },
-      {
-        "item_name": "Color Rug",
-        "item_type": 8,
-        "model_url": "models/js/rug.js",
-        "xpos": 905.87,
-        "ypos": 0.25000500000000003,
-        "zpos": 44.6,
-        "rotation": -1.57,
-        "scale_x": 1,
-        "scale_y": 1,
-        "scale_z": 1,
-        "fixed": false
-      },
-      {
-        "item_name": "Poster",
-        "item_type": 2,
-        "model_url": "models/js/poster.js",
-        "xpos": 1038.448,
-        "ypos": 146.226,
-        "zpos": 148.65,
-        "rotation": -1.5707963267948966,
-        "scale_x": 1,
-        "scale_y": 1,
-        "scale_z": 1,
-        "fixed": false
-      },
-      {
-        "item_name": "Sofa",
-        "item_type": 1,
-        "model_url": "models/js/sofa.js",
-        "xpos": 356.9267,
-        "ypos": 42.54509923821,
-        "zpos": -21.686,
-        "rotation": 1.57,
-        "scale_x": 1,
-        "scale_y": 1,
-        "scale_z": 1,
-        "fixed": false
-      },
-      {
-        "item_name": "Coffee Table",
-        "item_type": 1,
-        "model_url": "models/js/table_coffee.js",
-        "xpos": 468.479,
-        "ypos": 24.01483158034958,
-        "zpos": -23.47,
-        "rotation": 1.57,
-        "scale_x": 1,
-        "scale_y": 1,
-        "scale_z": 1,
-        "fixed": false
-      },
-      {
-        "item_name": "Floor Lamp",
-        "item_type": 1,
-        "model_url": "models/js/lamp.js",
-        "xpos": 346.697,
-        "ypos": 72.163997943445,
-        "zpos": -175.2,
-        "rotation": 0,
-        "scale_x": 1,
-        "scale_y": 1,
-        "scale_z": 1,
-        "fixed": false
-      }
-    ]
-  }`;
-  var snapshotRubyHash = $("#snapshotData").data("param");
 
-  data = convertRubyHashToJSON(snapshotRubyHash);
-
-  room3d.model.loadSerialized(data);
+  fetch("../../../floorplan.json")
+  .then(response => response.json())
+  .then(json => {
+    console.log(json)
+    room3d.model.loadFromObject(json);
+  });
+  
 });

@@ -6,16 +6,16 @@
         "y": 0
       },
       "a8b17dd7-026c-de11-3077-01a169d1b795": {
-        "x": 15700.0,
+        "x": 4710.0,
         "y": 0
       },
       "8039b51e-5a0b-8843-3129-32e647a42002": {
         "x": 0,
-        "y": 15700.0
+        "y": 4710.0
       },
       "8a66d562-2eb4-2147-763c-7962e4208a0a": {
-        "x": 15700.0,
-        "y": 15700.0
+        "x": 4710.0,
+        "y": 4710.0
       }
     },
     "walls": [
@@ -86,17 +86,93 @@
   },
   "items": [
     {
-      "item_name": "Camera",
+      "item_name": "Chair",
       "item_type": null,
-      "model_url": "models/js/camera.js",
-      "xpos": 7588.607475951485,
+      "model_url": "models/js/chair.js",
+      "xpos": 689.4560784568409,
       "ypos": 0,
-      "zpos": 9405.26360309494,
+      "zpos": 1763.9176147563364,
       "rotation": 0,
       "scale_x": 1,
       "scale_y": 1,
       "scale_z": 1,
-      "fixed": false
+      "fixed": false,
+      "setup_start": "2024-10-18 09:00",
+      "setup_end": "2024-10-18 21:00",
+      "breakdown_start": "2024-10-18 09:00",
+      "breakdown_end": "2024-10-18 21:00"
+    },
+    {
+      "item_name": "Chair",
+      "item_type": null,
+      "model_url": "models/js/chair.js",
+      "xpos": 536.53399502495,
+      "ypos": 0,
+      "zpos": 1909.888694395869,
+      "rotation": 0,
+      "scale_x": 1,
+      "scale_y": 1,
+      "scale_z": 1,
+      "fixed": false,
+      "setup_start": "2024-10-18 09:00",
+      "setup_end": "2024-10-18 21:00",
+      "breakdown_start": "2024-10-18 09:00",
+      "breakdown_end": "2024-10-18 21:00"
+    },
+    {
+      "item_name": "Chair",
+      "item_type": null,
+      "model_url": "models/js/chair.js",
+      "xpos": 425.3179343472111,
+      "ypos": 0,
+      "zpos": 2118.418808166629,
+      "rotation": 0,
+      "scale_x": 1,
+      "scale_y": 1,
+      "scale_z": 1,
+      "fixed": false,
+      "setup_start": "2024-10-18 09:00",
+      "setup_end": "2024-10-18 21:00",
+      "breakdown_start": "2024-10-18 09:00",
+      "breakdown_end": "2024-10-18 21:00"
+    },
+    {
+      "item_name": "Woman",
+      "item_type": null,
+      "model_url": "models/js/woman.js",
+      "xpos": 629.5137109922794,
+      "ypos": 0,
+      "zpos": 1335.9813834224572,
+      "rotation": 0,
+      "scale_x": 1,
+      "scale_y": 1,
+      "scale_z": 1,
+      "fixed": false,
+      "setup_start": "2024-10-18 09:00",
+      "setup_end": "2024-10-18 21:00",
+      "breakdown_start": "2024-10-18 09:00",
+      "breakdown_end": "2024-10-18 21:00"
+    },
+    {
+      "item_name": "Man",
+      "item_type": null,
+      "model_url": "models/js/man.js",
+      "xpos": 652.0843928283809,
+      "ypos": 0,
+      "zpos": 1532.3271600675253,
+      "rotation": 0,
+      "scale_x": 1,
+      "scale_y": 1,
+      "scale_z": 1,
+      "fixed": false,
+      "setup_start": "2024-10-18 09:00",
+      "setup_end": "2024-10-18 21:00",
+      "breakdown_start": "2024-10-18 09:00",
+      "breakdown_end": "2024-10-18 21:00"
     }
-  ]
+  ],
+  "timeline": {
+    "start_time": 0,
+    "end_time": 0
+  }
 }

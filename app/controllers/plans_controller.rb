@@ -115,6 +115,12 @@ class PlansController < ApplicationController
     scaler = 31.4
     json_content = JSON.parse(File.read(Rails.root.join('lib', 'design.room3d')))
 
+    # Update timeline
+    json_content['timeline'] = {
+      'start_time' => snapshot_data['venue_start_time'],
+      'end_time' => snapshot_data['venue_end_time']
+    }
+
     # Update the corners of the floorplan
     json_content['floorplan']['corners'] = {
       '7922010e-f5f3-2e53-46f4-3819ea8cdc12' => {
@@ -148,7 +154,11 @@ class PlansController < ApplicationController
                                      'scale_x' => 1,
                                      'scale_y' => 1,
                                      'scale_z' => 1,
-                                     'fixed' => false
+                                     'fixed' => false,
+                                     'setup_start' => values['item_setup_start'],
+                                     'setup_end' => values['item_setup_end'],
+                                     'breakdown_start' => values['item_breakdown_start'],
+                                     'breakdown_end' => values['item_breakdown_end'],
                                    })
     end
 

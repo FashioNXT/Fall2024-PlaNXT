@@ -375,6 +375,13 @@
       clonedElement.setAttribute('item-depth', item.depth);
       clonedElement.setAttribute('item-xpos', item.xpos);
       clonedElement.setAttribute('item-zpos', item.zpos);
+      
+      // Add times as attributes
+      clonedElement.setAttribute('item-setup-start', item.setup_start_time);
+      clonedElement.setAttribute('item-setup-end', item.setup_end_time);
+      clonedElement.setAttribute('item-breakdown-start', item.breakdown_start_time);
+      clonedElement.setAttribute('item-breakdown-end', item.breakdown_end_time);
+
       clonedElement.setAttribute('data-cloned', 'true');  
 
       // set width, height, rotation, description
@@ -512,10 +519,14 @@
     preview3dlink.addEventListener("click", function(event) {
         event.preventDefault();  // Prevent default link behavior
 
+        const planStartTime = 0;
+        const planEndTime = 0;
         const planWidth = <%= @plan.venue_width %>;
         const planLength = <%= @plan.venue_length %>; 
 
         const snapshot = {
+          venue_start_time: planStartTime,
+          venue_end_time: planEndTime,
           venue_length: planLength,
           venue_width: planWidth,
           items: {}
@@ -523,6 +534,7 @@
         const itemList = document.getElementById('dropzone').querySelectorAll('.draggable');
         for (let i = 0; i < itemList.length; i++) {
           const item = itemList[i];
+          console.log(item)
           const itemID = item.id;
           const itemType = item.getAttribute('item-real-type');
           const itemName = item.getAttribute('item-name');
@@ -532,6 +544,11 @@
           const itemRotation = item.getAttribute('item-rotation');
           const itemXPos = parseFloat(item.getAttribute('item-xpos'));
           const itemZPos = parseFloat(item.getAttribute('item-zpos')); // very weird, zpos is the height in 3D, zpos is the y position in 3D
+          const setupStartTime = parseDateTime(item.getAttribute('item-setup-start'), true);
+          const setupEndTime = parseDateTime(item.getAttribute('item-setup-end'), true);
+          const breakdownStartTime = parseDateTime(item.getAttribute('item-breakdown-start'), true);
+          const breakdownEndTime = parseDateTime(item.getAttribute('item-breakdown-end'), true);
+
           snapshot.items[itemID] = {
             item_type: itemType,
             item_name: itemName,
@@ -540,7 +557,11 @@
             item_depth: itemDepth,
             item_rotation: itemRotation,
             item_xpos: itemXPos,
-            item_zpos: itemZPos
+            item_zpos: itemZPos,
+            item_setup_start: setupStartTime,
+            item_setup_end: setupEndTime,
+            item_breakdown_start: breakdownStartTime,
+            item_breakdown_end: breakdownEndTime
           };
         }
 
@@ -549,6 +570,8 @@
         const baseURL = "/plans/preview3d";
         const fullURL = baseURL + "?snapshot_data=" + encodedData;
 
+        console.log(fullURL);
+        
         // Navigate to the URL
         window.open(fullURL, "_blank");
     });

@@ -106,6 +106,8 @@ class PlansController < ApplicationController
 
   def floorplans2d
     @plan = Plan.find(params[:id])
+    @venue_start = @plan.steps.first.start_time
+    @venue_end = @plan.steps.first.end_time
   end
 
   def preview3d

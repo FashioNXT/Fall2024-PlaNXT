@@ -536,7 +536,6 @@ $(document).ready(function() {
     return jsonString;
   }
 
-
   fetch("../../../floorplan.json")
   .then(response => response.json())
   .then(json => {

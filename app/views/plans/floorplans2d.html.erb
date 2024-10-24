@@ -519,8 +519,10 @@
     preview3dlink.addEventListener("click", function(event) {
         event.preventDefault();  // Prevent default link behavior
 
-        const planStartTime = 0;
-        const planEndTime = 0;
+        // TODO: 
+
+        const planStartTime = '<%= @venue_start %>';
+        const planEndTime = '<%= @venue_end %>';
         const planWidth = <%= @plan.venue_width %>;
         const planLength = <%= @plan.venue_length %>; 
 
@@ -571,7 +573,7 @@
         const fullURL = baseURL + "?snapshot_data=" + encodedData;
 
         console.log(fullURL);
-        
+
         // Navigate to the URL
         window.open(fullURL, "_blank");
     });

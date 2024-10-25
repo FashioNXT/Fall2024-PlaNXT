@@ -46111,11 +46111,6 @@ var Model = function(textureDir) {
   // Added by Govind
   this.loadFromObject = (obj) => {
 
-	timelineBar = document.getElementById('timeline-bar-3d');
-	timelineBar.setAttribute('min', 0);
-	timelineBar.setAttribute('max', 100);
-	timelineBar.setAttribute('value', 10);
-
 	this.roomLoadedCallbacks.fire()
 	scope.newRoom(
 		obj.floorplan,

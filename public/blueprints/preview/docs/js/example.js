@@ -508,6 +508,13 @@ $(document).ready(function() {
   var sideMenu = new SideMenu(room3d, viewerFloorplanner, modalEffects);
   var textureSelector = new TextureSelector(room3d, sideMenu);        
   var cameraButtons = new CameraButtons(room3d);
+  let fullFloorplanObj = null;
+  let currentFloorplanObj = null;
+
+  let startTime = null;
+  let endTime = null;
+  let timelineBar = document.getElementById('timeline-bar-3d');
+
   mainControls(room3d);
 
   // This serialization format needs work
@@ -523,24 +530,64 @@ $(document).ready(function() {
   //   reader.readAsText(files[0]);
   // }
 
-  function convertRubyHashToJSON(rubyHashString) {
-    // Replace => with :
-    let jsonString = rubyHashString.replace(/=>/g, ":");
-
-    // Wrap string keys without double quotes in double quotes
-    jsonString = jsonString.replace(/([\{,\s])([a-zA-Z0-9_]+)(?=:)/g, '$1"$2"');
-
-    // Convert 'nil' to 'null'
-    jsonString = jsonString.replace(/\bnil\b/g, "null");
-
-    return jsonString;
+  function msToMins(ms) {
+    return Math.floor(ms / 60000)
   }
+
+  function minsToMs(mins) {
+    return mins * 60000;
+  }
+
+  function setupTimelineBar() {
+    // expect fullFloorplanObj to be populated
+
+    startTime = new Date(fullFloorplanObj.timeline.start_time);
+    endTime = new Date(fullFloorplanObj.timeline.end_time);
+
+    mins = msToMins(endTime - startTime)
+
+    console.log(mins)
+
+    timelineBar.setAttribute('min', 0);
+    timelineBar.setAttribute('max', mins);
+    timelineBar.setAttribute('value', 0);
+    timelineBar.setAttribute('step', 1);
+
+    timelineBar.addEventListener("click", updateViewFromTimeline);
+
+    currentFloorplanObj = {...fullFloorplanObj}
+    updateViewFromTimeline();
+  }
+
+  function updateViewFromTimeline() {
+    let currTime = new Date(minsToMs(timelineBar.value) + startTime.getTime());
+
+    console.log(startTime, endTime)
+    console.log(minsToMs(timelineBar.value), startTime.getTime())
+    console.log(currTime)
+
+    let currentItems = fullFloorplanObj.items.filter((item) => {
+      let setupStart = new Date(item.setup_start);
+      let breakdownEnd = new Date(item.breakdown_end);
+
+      if (!(currTime >= setupStart && currTime <= breakdownEnd)) {
+        console.log("filtering item")
+      }
+      return currTime >= setupStart && currTime <= breakdownEnd;
+    })
+
+    currentFloorplanObj.items = currentItems;
+
+    room3d.model.loadFromObject(currentFloorplanObj);
+  }
+
 
   fetch("../../../floorplan.json")
   .then(response => response.json())
   .then(json => {
     console.log(json)
-    room3d.model.loadFromObject(json);
+    fullFloorplanObj = json;
+    setupTimelineBar();
   });
   
 });

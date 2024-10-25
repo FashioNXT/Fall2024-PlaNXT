@@ -533,37 +533,22 @@
           venue_width: planWidth,
           items: {}
         };
-        const itemList = document.getElementById('dropzone').querySelectorAll('.draggable');
-        for (let i = 0; i < itemList.length; i++) {
-          const item = itemList[i];
+        for (let i = 0; i < items.length; i++) {
+          const item = items[i];
           console.log(item)
           const itemID = item.id;
-          const itemType = item.getAttribute('item-real-type');
-          const itemName = item.getAttribute('item-name');
-          const itemModel = item.getAttribute('item-model');
-          const itemWidth = item.getAttribute('item-width');
-          const itemDepth = item.getAttribute('item-depth');
-          const itemRotation = item.getAttribute('item-rotation');
-          const itemXPos = parseFloat(item.getAttribute('item-xpos'));
-          const itemZPos = parseFloat(item.getAttribute('item-zpos')); // very weird, zpos is the height in 3D, zpos is the y position in 3D
-          const setupStartTime = parseDateTime(item.getAttribute('item-setup-start'), true);
-          const setupEndTime = parseDateTime(item.getAttribute('item-setup-end'), true);
-          const breakdownStartTime = parseDateTime(item.getAttribute('item-breakdown-start'), true);
-          const breakdownEndTime = parseDateTime(item.getAttribute('item-breakdown-end'), true);
-
           snapshot.items[itemID] = {
-            item_type: itemType,
-            item_name: itemName,
-            item_model: itemModel,
-            item_width: itemWidth,
-            item_depth: itemDepth,
-            item_rotation: itemRotation,
-            item_xpos: itemXPos,
-            item_zpos: itemZPos,
-            item_setup_start: setupStartTime,
-            item_setup_end: setupEndTime,
-            item_breakdown_start: breakdownStartTime,
-            item_breakdown_end: breakdownEndTime
+            item_name: item.name,
+            item_model: item.model,
+            item_width: item.width,
+            item_depth: item.depth,
+            item_rotation: item.rotation,
+            item_xpos: item.xpos,
+            item_zpos: item.zpos,
+            item_setup_start: item.setup_start_time,
+            item_setup_end: item.setup_end_time,
+            item_breakdown_start: item.breakdown_start_time,
+            item_breakdown_end: item.breakdown_end_time
           };
         }
 

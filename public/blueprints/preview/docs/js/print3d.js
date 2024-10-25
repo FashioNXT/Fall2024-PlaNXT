@@ -48315,7 +48315,7 @@ var ThreeMain = function(model, element, canvasElement, opts) {
   var options = {
     resize: true,
     pushHref: false,
-    spin: true,
+    spin: false,
     spinSpeed: .00002,
     clickPan: true,
     canMoveFixedItems: false

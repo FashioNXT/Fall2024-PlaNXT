@@ -6,16 +6,16 @@
         "y": 0
       },
       "a8b17dd7-026c-de11-3077-01a169d1b795": {
-        "x": 15700.0,
+        "x": 1256.0,
         "y": 0
       },
       "8039b51e-5a0b-8843-3129-32e647a42002": {
         "x": 0,
-        "y": 15700.0
+        "y": 1256.0
       },
       "8a66d562-2eb4-2147-763c-7962e4208a0a": {
-        "x": 15700.0,
-        "y": 15700.0
+        "x": 1256.0,
+        "y": 1256.0
       }
     },
     "walls": [
@@ -86,17 +86,178 @@
   },
   "items": [
     {
-      "item_name": "Camera",
+      "item_name": "Chair",
       "item_type": null,
-      "model_url": "models/js/camera.js",
-      "xpos": 7588.607475951485,
+      "model_url": "models/js/chair.js",
+      "xpos": 272.0430239240361,
       "ypos": 0,
-      "zpos": 9405.26360309494,
+      "zpos": 481.6192749394796,
       "rotation": 0,
       "scale_x": 1,
       "scale_y": 1,
       "scale_z": 1,
-      "fixed": false
+      "fixed": false,
+      "setup_start": "2011-11-11T09:00:00.000Z",
+      "setup_end": "2011-11-11T09:00:00.000Z",
+      "breakdown_start": "2011-11-11T10:00:00.000Z",
+      "breakdown_end": "2011-11-11T10:00:00.000Z"
+    },
+    {
+      "item_name": "Chair",
+      "item_type": null,
+      "model_url": "models/js/chair.js",
+      "xpos": 285.31249861200683,
+      "ypos": 0,
+      "zpos": 574.505597755275,
+      "rotation": 0,
+      "scale_x": 1,
+      "scale_y": 1,
+      "scale_z": 1,
+      "fixed": false,
+      "setup_start": "2011-11-11T09:00:00.000Z",
+      "setup_end": "2011-11-11T09:00:00.000Z",
+      "breakdown_start": "2011-11-11T10:00:00.000Z",
+      "breakdown_end": "2011-11-11T10:00:00.000Z"
+    },
+    {
+      "item_name": "Chair",
+      "item_type": null,
+      "model_url": "models/js/chair.js",
+      "xpos": 303.88976317516597,
+      "ypos": 0,
+      "zpos": 654.1224458830995,
+      "rotation": 0,
+      "scale_x": 1,
+      "scale_y": 1,
+      "scale_z": 1,
+      "fixed": false,
+      "setup_start": "2011-11-11T09:00:00.000Z",
+      "setup_end": "2011-11-11T09:00:00.000Z",
+      "breakdown_start": "2011-11-11T10:00:00.000Z",
+      "breakdown_end": "2011-11-11T10:00:00.000Z"
+    },
+    {
+      "item_name": "Red Chair",
+      "item_type": null,
+      "model_url": "models/js/chair_red.js",
+      "xpos": 542.5541662040023,
+      "ypos": 0,
+      "zpos": 525.2410141906093,
+      "rotation": 0,
+      "scale_x": 1,
+      "scale_y": 1,
+      "scale_z": 1,
+      "fixed": false,
+      "setup_start": "2011-11-11T11:00:00.000Z",
+      "setup_end": "2011-11-11T11:00:00.000Z",
+      "breakdown_start": "2011-11-11T17:00:00.000Z",
+      "breakdown_end": "2011-11-11T17:00:00.000Z"
+    },
+    {
+      "item_name": "Man",
+      "item_type": null,
+      "model_url": "models/js/man.js",
+      "xpos": 611.7788042070151,
+      "ypos": 0,
+      "zpos": 451.22978210539304,
+      "rotation": 0,
+      "scale_x": 1,
+      "scale_y": 1,
+      "scale_z": 1,
+      "fixed": false,
+      "setup_start": "2011-11-11T11:00:00.000Z",
+      "setup_end": "2011-11-11T11:00:00.000Z",
+      "breakdown_start": "2011-11-11T17:00:00.000Z",
+      "breakdown_end": "2011-11-11T17:00:00.000Z"
+    },
+    {
+      "item_name": "Camera",
+      "item_type": null,
+      "model_url": "models/js/camera.js",
+      "xpos": 146.11331333656005,
+      "ypos": 0,
+      "zpos": 135.49074107354383,
+      "rotation": 0,
+      "scale_x": 1,
+      "scale_y": 1,
+      "scale_z": 1,
+      "fixed": false,
+      "setup_start": "2011-11-11T17:00:00.000Z",
+      "setup_end": "2011-11-11T17:00:00.000Z",
+      "breakdown_start": "2011-11-11T21:00:00.000Z",
+      "breakdown_end": "2011-11-11T21:00:00.000Z"
+    },
+    {
+      "item_name": "Camera",
+      "item_type": null,
+      "model_url": "models/js/camera.js",
+      "xpos": 71.80425508392378,
+      "ypos": 0,
+      "zpos": 998.0065957916436,
+      "rotation": 0,
+      "scale_x": 1,
+      "scale_y": 1,
+      "scale_z": 1,
+      "fixed": false,
+      "setup_start": "2011-11-11T17:00:00.000Z",
+      "setup_end": "2011-11-11T17:00:00.000Z",
+      "breakdown_start": "2011-11-11T21:00:00.000Z",
+      "breakdown_end": "2011-11-11T21:00:00.000Z"
+    },
+    {
+      "item_name": "Woman",
+      "item_type": null,
+      "model_url": "models/js/woman.js",
+      "xpos": 898.3250009253286,
+      "ypos": 0,
+      "zpos": 387.46184706127843,
+      "rotation": 0,
+      "scale_x": 1,
+      "scale_y": 1,
+      "scale_z": 1,
+      "fixed": false,
+      "setup_start": "2011-11-11T17:00:00.000Z",
+      "setup_end": "2011-11-11T17:00:00.000Z",
+      "breakdown_start": "2011-11-11T21:00:00.000Z",
+      "breakdown_end": "2011-11-11T21:00:00.000Z"
+    },
+    {
+      "item_name": "Man",
+      "item_type": null,
+      "model_url": "models/js/man.js",
+      "xpos": 853.2832435280832,
+      "ypos": 0,
+      "zpos": 629.0407429242014,
+      "rotation": 0,
+      "scale_x": 1,
+      "scale_y": 1,
+      "scale_z": 1,
+      "fixed": false,
+      "setup_start": "2011-11-11T17:00:00.000Z",
+      "setup_end": "2011-11-11T17:00:00.000Z",
+      "breakdown_start": "2011-11-11T21:00:00.000Z",
+      "breakdown_end": "2011-11-11T21:00:00.000Z"
+    },
+    {
+      "item_name": "Blue Chair",
+      "item_type": null,
+      "model_url": "models/js/chair_blue.js",
+      "xpos": 818.5592397137942,
+      "ypos": 0,
+      "zpos": 517.279329377827,
+      "rotation": 0,
+      "scale_x": 1,
+      "scale_y": 1,
+      "scale_z": 1,
+      "fixed": false,
+      "setup_start": "2011-11-11T09:00:00.000Z",
+      "setup_end": "2011-11-11T09:00:00.000Z",
+      "breakdown_start": "2011-11-11T12:00:00.000Z",
+      "breakdown_end": "2011-11-11T12:00:00.000Z"
     }
-  ]
+  ],
+  "timeline": {
+    "start_time": "2011-11-11 09:00:00 UTC",
+    "end_time": "2011-11-11 21:00:00 UTC"
+  }
 }

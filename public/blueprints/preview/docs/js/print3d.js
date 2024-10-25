@@ -46099,13 +46099,24 @@ var Model = function(textureDir) {
     // TODO: a much better serialization format.
     this.roomLoadingCallbacks.fire();
 
-    data = JSON.parse(data_json)
+    let data = JSON.parse(data_json)
     scope.newRoom(
       data.floorplan,
       data.items
     );
 
     scope.roomLoadedCallbacks.fire();
+  }
+
+  // Added by Govind
+  this.loadFromObject = (obj) => {
+
+	this.roomLoadedCallbacks.fire()
+	scope.newRoom(
+		obj.floorplan,
+		obj.items
+	);
+	scope.roomLoadedCallbacks.fire();
   }
 
   this.exportSerialized = function() {
@@ -48304,7 +48315,7 @@ var ThreeMain = function(model, element, canvasElement, opts) {
   var options = {
     resize: true,
     pushHref: false,
-    spin: true,
+    spin: false,
     spinSpeed: .00002,
     clickPan: true,
     canMoveFixedItems: false
@@ -48369,7 +48380,8 @@ var ThreeMain = function(model, element, canvasElement, opts) {
 
     var skybox = new ThreeSkybox(scene);
 
-    scope.controls = new ThreeControls(camera, domElement);
+	console.log(renderer.domElement);
+    scope.controls = new ThreeControls(camera, renderer.domElement);
 
     hud = new ThreeHUD(scope);
 

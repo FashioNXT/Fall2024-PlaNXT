@@ -22,7 +22,7 @@ var Model = function(textureDir) {
     // TODO: a much better serialization format.
     this.roomLoadingCallbacks.fire();
 
-    data = JSON.parse(data_json)
+    let data = JSON.parse(data_json)
     scope.newRoom(
       data.floorplan,
       data.items

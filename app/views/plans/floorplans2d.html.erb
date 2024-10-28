@@ -520,9 +520,8 @@
         event.preventDefault();  // Prevent default link behavior
 
         // TODO: 
-
-        const planStartTime = '<%= @venue_start %>';
-        const planEndTime = '<%= @venue_end %>';
+        const planStartTime = setupStartTime;
+        const planEndTime = setupEndTime;
         const planWidth = <%= @plan.venue_width %>;
         const planLength = <%= @plan.venue_length %>; 
 
@@ -641,7 +640,7 @@
       date = addMinutesToDate(date, value);
       
       var hour = date.getUTCHours();
-      var minute = date.getMinutes();
+      var minute = date.getUTCMinutes();
 
       minute = minute < 10 ? '0'+minute : minute;
       var strTime = year + '-' + month + '-' + day + ' ' + hour + ':' + minute;

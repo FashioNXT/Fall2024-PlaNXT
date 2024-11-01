@@ -117,6 +117,9 @@
             <span id='end-time'>End</span>
 
         </div>
+        <div style="text-align: center; margin-top: 5px;">
+            <p id="rangeValue">Plan time:</p>
+        </div>
 
         <!-- 3D Viewer -->
         <div id="viewer">
@@ -211,3 +214,48 @@
 
     <div id="snapshotData" data-param=""></div>
 </div>
+
+<script>
+  // Declare a variable to hold the start_date
+  let startDate;
+  const slider = document.getElementById('timeline-bar-3d');
+
+  // Fetch data from floorplan.json
+  fetch('/floorplan.json')
+    .then(response => response.json())
+    .then(data => {
+      // Assign the start_time to the startDate variable
+      startDate = data.timeline.start_time;
+      //update slider with Plan time as startDate
+      updateTime(0, startDate);
+    })
+    .catch(error => console.error('Error fetching floorplan.json:', error));
+
+    function addMinutesToDate(date, minutes) {
+      return new Date(date.getTime() + minutes * 60000);
+    }
+
+    // Function to update the date displayed based on the slider value
+    function updateTime(value, start_time){
+      var date = new Date(start_time);
+      var month = date.getUTCMonth() + 1;
+      var day = date.getUTCDate();
+      var year = date.getUTCFullYear();
+
+      date = addMinutesToDate(date, value);
+        
+      var hour = date.getUTCHours();
+      var minute = date.getUTCMinutes();
+
+      minute = minute < 10 ? '0'+minute : minute;
+      var strTime = year + '-' + month + '-' + day + ' ' + hour + ':' + minute;
+      current_time = strTime;
+      document.getElementById('rangeValue').innerHTML = "Plan time: " + strTime;
+    }
+
+    slider.oninput = function() {
+      //update slider with Plan time as calculated Date
+      updateTime(slider.value - slider.min, startDate);
+    };
+
+</script>

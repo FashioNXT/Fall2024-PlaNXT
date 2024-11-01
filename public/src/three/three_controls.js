@@ -35,7 +35,7 @@ var ThreeControls = function (object, domElement) {
 
 	// Set to true to disable this control
 	this.noRotate = false;
-	this.rotateSpeed = 1.0;
+	this.rotateSpeed = 2.0;
 
 	// Set to true to disable this control
 	this.noPan = false;
@@ -63,7 +63,7 @@ var ThreeControls = function (object, domElement) {
 
 	var scope = this;
 
-	var EPS = 0.000001;
+	var EPS = 0.000005;
 
 	var rotateStart = new THREE.Vector2();
 	var rotateEnd = new THREE.Vector2();

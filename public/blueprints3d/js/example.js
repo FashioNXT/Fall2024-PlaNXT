@@ -564,11 +564,13 @@ $(document).ready(function() {
   }
 
   function updateViewFromTimeline() {
+
     let currTime = new Date(minsToMs(timelineBar.value) + startTime.getTime());
 
     // console.log(startTime, endTime)
     // console.log(minsToMs(timelineBar.value), startTime.getTime())
     // console.log(currTime)
+
 
     room3d.model.scene.getItems().forEach((item) => {
 
@@ -592,7 +594,7 @@ $(document).ready(function() {
     setupTimelineBar();
     updateViewFromTimeline();
     // Force a re-render
-    room3d.three.render();
+    room3d.three.forceRender();
   });
   
 });

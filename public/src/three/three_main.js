@@ -158,6 +158,7 @@ var ThreeMain = function(model, element, canvasElement, opts) {
     needsUpdate = true;
 
   }
+
   function shouldRender() {
     // Do we need to draw a new frame
     if (scope.controls.needsUpdate || controller.needsUpdate || needsUpdate || model.scene.needsUpdate) {
@@ -182,8 +183,12 @@ var ThreeMain = function(model, element, canvasElement, opts) {
     lastRender = Date.now();
   };
 
+  this.forceRender = () => {
+    render();
+  }
+
   function animate() {
-    var delay = 1000 / 144;
+    var delay = 1000 / 60;
     setTimeout(function() { 
       requestAnimationFrame(animate);
       }, delay);

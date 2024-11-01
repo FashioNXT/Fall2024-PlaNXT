@@ -46758,10 +46758,10 @@ var Model = function(textureDir) {
     return JSON.stringify(room, null,2);
   }
 
-  this.newRoom = function(floorplan, items, hideAll = true) {
+  this.newRoom = function(floorplan, items) {
     this.scene.clearItems();
     this.floorplan.loadFloorplan(floorplan);
-    this.scene.addItemsFromObjectArray(items, hideAll);
+    this.scene.addItemsFromObjectArray(items);
   }
 }
 
@@ -47007,7 +47007,7 @@ var Scene = function(model, textureDir) {
     }
   }
 
-  this.addItem = function(itemType, fileName, metadata, position, rotation, scale, fixed, hide) {
+  this.addItem = function(itemType, fileName, metadata, position, rotation, scale, fixed) {
     itemType = itemType || 1;
 
     var loaderCallback = function(geometry, materials) {
@@ -47021,11 +47021,6 @@ var Scene = function(model, textureDir) {
       items.push(item);
       scope.add(item);
       item.initObject();
-
-      if(hide) {
-        item.visible = false;
-      }
-
       scope.itemLoadedCallbacks.fire(item);
     }
 
@@ -47039,7 +47034,7 @@ var Scene = function(model, textureDir) {
   }
 
   // Copied from model.newRoom
-  this.addItemsFromObjectArray = (items, hideAll = true) => {
+  this.addItemsFromObjectArray = (items) => {
     items.forEach((item) => {
       position = new THREE.Vector3(
         item.xpos, item.ypos, item.zpos)    
@@ -47058,9 +47053,7 @@ var Scene = function(model, textureDir) {
         position, 
         item.rotation,
         scale,
-        item.fixed,
-        hideAll
-      );
+        item.fixed);
     });
   }
 }
@@ -47721,7 +47714,7 @@ var ThreeControls = function (object, domElement) {
 
 	// Set to true to disable this control
 	this.noRotate = false;
-	this.rotateSpeed = 1.0;
+	this.rotateSpeed = 2.0;
 
 	// Set to true to disable this control
 	this.noPan = false;
@@ -47749,7 +47742,7 @@ var ThreeControls = function (object, domElement) {
 
 	var scope = this;
 
-	var EPS = 0.000001;
+	var EPS = 0.000005;
 
 	var rotateStart = new THREE.Vector2();
 	var rotateEnd = new THREE.Vector2();
@@ -49076,6 +49069,7 @@ var ThreeMain = function(model, element, canvasElement, opts) {
     needsUpdate = true;
 
   }
+
   function shouldRender() {
     // Do we need to draw a new frame
     if (scope.controls.needsUpdate || controller.needsUpdate || needsUpdate || model.scene.needsUpdate) {
@@ -49100,8 +49094,12 @@ var ThreeMain = function(model, element, canvasElement, opts) {
     lastRender = Date.now();
   };
 
+  this.forceRender = () => {
+    render();
+  }
+
   function animate() {
-    var delay = 1000 / 144;
+    var delay = 1000 / 60;
     setTimeout(function() { 
       requestAnimationFrame(animate);
       }, delay);

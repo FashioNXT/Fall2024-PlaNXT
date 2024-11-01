@@ -551,15 +551,12 @@
           };
         }
 
-        const encodedData = encodeURIComponent(JSON.stringify(snapshot));
         // // Construct the full URL
-        const baseURL = "/plans/preview3d";
-        const fullURL = baseURL + "?snapshot_data=" + encodedData;
-
-        console.log(fullURL);
+        const plan_id = <%= @plan.id %>
+        const url = `/plans/${plan_id}/preview3d`;
 
         // Navigate to the URL
-        window.open(fullURL, "_blank");
+        window.open(url, "_blank");
     });
 
 

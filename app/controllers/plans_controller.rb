@@ -111,16 +111,15 @@ class PlansController < ApplicationController
   end
 
   def preview3d
-    snapshot_data_json = params[:snapshot_data]
-    snapshot_data = JSON.parse(snapshot_data_json)
+    @plan = Plan.find(params[:id])
 
     scaler = 31.4
     json_content = JSON.parse(File.read(Rails.root.join('lib', 'design.room3d')))
 
     # Update timeline
     json_content['timeline'] = {
-      'start_time' => snapshot_data['venue_start_time'],
-      'end_time' => snapshot_data['venue_end_time']
+      'start_time' => @plan.steps.first.start_time,
+      'end_time' => @plan.steps.first.end_time
     }
 
     # Update the corners of the floorplan
@@ -130,37 +129,36 @@ class PlansController < ApplicationController
         'y' => 0
       },
       'a8b17dd7-026c-de11-3077-01a169d1b795' => {
-        'x' => snapshot_data['venue_width'] * scaler,
+        'x' => @plan.venue_width * scaler,
         'y' => 0
       },
       '8039b51e-5a0b-8843-3129-32e647a42002' => {
         'x' => 0,
-        'y' => snapshot_data['venue_length'] * scaler
+        'y' => @plan.venue_length * scaler
       },
       '8a66d562-2eb4-2147-763c-7962e4208a0a' => {
-        'x' => snapshot_data['venue_width'] * scaler,
-        'y' => snapshot_data['venue_length'] * scaler
+        'x' => @plan.venue_width * scaler,
+        'y' => @plan.venue_length * scaler
       }
     }
 
     # Add items to the floorplan
-    snapshot_data['items'].each_value do |values|
+    @plan.steps.first.items.each do |item|
       json_content['items'].append({
-                                     'item_name' => values['item_name'],
-                                     'item_type' => values['item_type'],
-                                     'model_url' => values['item_model'],
-                                     'xpos' => values['item_xpos'] * scaler,
+                                     'item_name' => item.name,
+                                     'model_url' => item.model,
+                                     'xpos' => item.xpos * scaler,
                                      'ypos' => 0,
-                                     'zpos' => values['item_zpos'] * scaler,
+                                     'zpos' => item.zpos * scaler,
                                      'rotation' => 0,
                                      'scale_x' => 1,
                                      'scale_y' => 1,
                                      'scale_z' => 1,
                                      'fixed' => false,
-                                     'setup_start' => values['item_setup_start'],
-                                     'setup_end' => values['item_setup_end'],
-                                     'breakdown_start' => values['item_breakdown_start'],
-                                     'breakdown_end' => values['item_breakdown_end'],
+                                     'setup_start' => item.setup_start_time,
+                                     'setup_end' => item.setup_end_time,
+                                     'breakdown_start' => item.breakdown_start_time,
+                                     'breakdown_end' => item.breakdown_end_time,
                                    })
     end
 

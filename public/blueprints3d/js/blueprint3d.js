@@ -45394,10 +45394,29 @@ Item.prototype.moveToPosition = function(vec3, intersection) {
     this.position.copy(vec3);
 }
 
-Item.prototype.clickReleased = function() {
+Item.prototype.clickReleased = function(intersection) {
     if (this.error) {
         this.hideError();
     }
+
+	fetch(`/items/${this.metadata.item_id}`, {
+		method: 'PUT',
+		headers: {
+		  "Content-Type": "application/json",
+		  "X-CSRF-Token": document.querySelector("[name='csrf-token']").content
+		},
+		body: JSON.stringify({ item: {
+			xpos: (intersection.point.x)/31.4,
+			zpos: (intersection.point.z)/31.4,
+		  } 
+		})
+	  })
+	  .then(data => {
+		console.log('Item updated successfully:', data);
+	  })
+	  .catch((error) => {
+		console.error('Error updating item:', error);
+	  });
 };
 
 // Returns an array of planes to use other than the ground plane
@@ -46736,9 +46755,9 @@ var Model = function(textureDir) {
     for ( var i = 0; i < objects.length; i++ ) {
       var object = objects[i];
       items_arr[i] = {
-        item_name: object.metadata.itemName,
-        item_type: object.metadata.itemType,
-        model_url: object.metadata.modelUrl,
+        item_name: object.metadata.item_name,
+        item_type: object.metadata.item_type,
+        model_url: object.metadata.model_url,
         xpos: object.position.x,
         ypos: object.position.y,
         zpos: object.position.z,
@@ -47005,6 +47024,24 @@ var Scene = function(model, textureDir) {
     if (!dontRemove) {
       utils.removeValue(items, item);
     }
+	console.log("removing item");
+	console.log(item);
+
+
+	fetch(`/items/${item.metadata.item_id}`, {
+		method: 'DELETE',
+		headers: {
+		  "Content-Type": "application/json",
+		  "X-CSRF-Token": document.querySelector("[name='csrf-token']").content
+		}
+	  })
+	  .then(data => {
+		console.log(item.metadata.item_id);
+		console.log('Item deleted successfully:', data);
+	  })
+	  .catch((error) => {
+		console.error('Error deleting item:', error);
+	  });
   }
 
   this.addItem = function(itemType, fileName, metadata, position, rotation, scale, fixed) {
@@ -47031,6 +47068,152 @@ var Scene = function(model, textureDir) {
       loaderCallback,
       textureDir
     );
+  }
+
+  this.addItemClicked = function(itemType, fileName, metadata, venue_start, venue_end, position, scale, rotation, fixed) {
+
+	console.log(itemType, fileName, metadata, venue_start, venue_end, position, scale, fixed)
+	//--------------------------------------------------------------------
+	// const createModal = new bootstrap.Modal(document.getElementById('createModal'));
+	const createModal = document.getElementById("createModal");
+    // createModal.show();
+	function parseDateTime(isoDatetime, noSeconds=false){
+    if(isoDatetime == null){
+        return null;
+    }
+    let date = new Date(isoDatetime);
+
+    let dateTimeStr = date.toISOString().replace('T', ' ').slice(0, 19);
+
+    if(noSeconds){
+        dateTimeStr = dateTimeStr.slice(0, 16);
+    }
+    return dateTimeStr;
+  }
+
+
+
+   
+
+		itemType = itemType || 1;
+		console.log("ffffffffffffffffffffffffff")
+		console.log(fileName);
+		console.log(metadata);
+
+
+		var loaderCallback = function(geometry, materials) {
+
+			var item = new item_types[itemType](
+				model,
+				metadata, geometry,
+				new THREE.MeshFaceMaterial(materials),
+				position, rotation, scale
+			);
+			
+			document.getElementById('createModalLabel').innerText = `Details: ${metadata.item_name}`;
+			document.getElementById('createItemWidth').value = item.getWidth();
+        	document.getElementById('createItemDepth').value = item.getDepth();
+			document.getElementById('createItemRotation').value = 0;
+			document.getElementById('createItemSetupStartTime').value = parseDateTime(venue_start);
+			document.getElementById('createItemSetupEndTime').value = parseDateTime(venue_end);
+			document.getElementById('createItemBreakdownStartTime').value = parseDateTime(venue_start);
+			document.getElementById('createItemBreakdownEndTime').value = parseDateTime(venue_end);
+			createModal.style.display = 'block';
+		
+			document.getElementById('confirmCreateBtn').onclick = function() {
+				// Get the values from the modal
+				var width = document.getElementById('createItemWidth').value;
+				var depth = document.getElementById('createItemDepth').value;
+				var rotation = document.getElementById('createItemRotation').value;
+				var description = document.getElementById('createItemDescription').value;
+				var setupStartTime = document.getElementById('createItemSetupStartTime').value + ":00";
+				var setupEndTime = document.getElementById('createItemSetupEndTime').value + ":00";
+				var breakdownStartTime = document.getElementById('createItemBreakdownStartTime').value + ":00";
+				var breakdownEndTime = document.getElementById('createItemBreakdownEndTime').value + ":00";
+				var inch2feet = 1/12;
+		
+				console.log(setupStartTime);
+
+			var xpos = item.position.x;
+			var ypos = item.position.y;
+			var zpos = item.position.z;
+			position = new THREE.Vector3(
+				item.xpos, item.ypos, item.zpos)
+
+			var box = new THREE.Box3().setFromObject(item);
+			// var width = box.max.x - box.min.x;
+			var height = box.max.y - box.min.y;
+			// var depth = box.max.z - box.min.z;
+
+			var itemData = {
+				name: item.metadata.item_name,
+				model: item.metadata.model_url,
+				width: width,
+				length: height,
+				depth: depth,
+				rotation: rotation,
+				description: '',
+				xpos: xpos/31.4,
+				ypos: 0,
+				zpos: zpos/31.4,
+				step_id: 1 ,
+				setup_start_time: setupStartTime,
+				setup_end_time: setupEndTime,
+				breakdown_start_time: breakdownStartTime,
+				breakdown_end_time: breakdownEndTime,
+			};
+
+			console.log("66666666666666666666666666666666");
+			console.log(itemData);
+			console.log("66666666666666666666666666666666");
+
+			fetch(`/items`, {
+			method: 'POST',
+			headers: {
+				"Content-Type": "application/json",
+				"X-CSRF-Token": document.querySelector("[name='csrf-token']").content
+			},
+			body: JSON.stringify(itemData)
+			}).then(response => {
+				if (!response.ok) {
+				throw new Error('Network response was not ok');
+				}
+				return response.json();  // Parse the JSON response to get the item data
+			})
+			.then(data => {
+				console.log("Item added successfully with ID:", data.id);
+				item.metadata.item_id = data.id;
+				console.log("new item data");
+				console.log(item);
+			})
+			.catch((error) => {
+			console.error('Error updating item:', error);
+			});
+			createModal.style.display = 'none';
+		};
+		document.getElementById('cancelCreateBtn').onclick = function() {
+			document.getElementById('createModal').style.display = 'none';
+		};
+	//-------------------------------------------------------------------
+			item.fixed = fixed || false;
+			items.push(item);
+			scope.add(item);
+			item.initObject();
+			console.log("inittttttttttttttt");
+			console.log(item);
+			scope.itemLoadedCallbacks.fire(item);
+
+	}
+
+	scope.itemLoadingCallbacks.fire();
+    console.log(fileName, textureDir)
+    loader.load(
+      fileName,
+      loaderCallback,
+      textureDir
+    );
+
+
   }
 
   // Copied from model.newRoom
@@ -47435,7 +47618,8 @@ var ThreeController = function(three, model, camera, element, controls, hud) {
 
       switch(state) {
         case states.DRAGGING:
-          selectedObject.clickReleased();
+		  var intersection = scope.itemIntersection(mouse, selectedObject);
+          selectedObject.clickReleased(intersection);
           switchState(states.SELECTED);
           break;
         case states.ROTATING:

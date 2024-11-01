@@ -159,6 +159,7 @@ class PlansController < ApplicationController
                                      'setup_end' => item.setup_end_time,
                                      'breakdown_start' => item.breakdown_start_time,
                                      'breakdown_end' => item.breakdown_end_time,
+                                     'item_id' => item.id
                                    })
     end
 

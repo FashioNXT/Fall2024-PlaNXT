@@ -48,9 +48,9 @@ var Model = function(textureDir) {
     for ( var i = 0; i < objects.length; i++ ) {
       var object = objects[i];
       items_arr[i] = {
-        item_name: object.metadata.itemName,
-        item_type: object.metadata.itemType,
-        model_url: object.metadata.modelUrl,
+        item_name: object.metadata.item_name,
+        item_type: object.metadata.item_type,
+        model_url: object.metadata.model_url,
         xpos: object.position.x,
         ypos: object.position.y,
         zpos: object.position.z,
@@ -58,7 +58,12 @@ var Model = function(textureDir) {
         scale_x: object.scale.x,
         scale_y: object.scale.y,
         scale_z: object.scale.z,
-        fixed: object.fixed
+        fixed: object.fixed,
+        id: object.metadata.item_id,
+        setup_start: object.metadata.setup_start,
+        setup_end: object.metadata.setup_end,
+        breakdown_start: object.metadata.breakdown_start,
+        breakdown_end: object.metadata.breakdown_end
       };
     }
 

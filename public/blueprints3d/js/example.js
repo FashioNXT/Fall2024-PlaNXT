@@ -326,19 +326,37 @@ var SideMenu = function(room3d, floorplanControls, modalEffects) {
   // TODO: this doesn't really belong here
   function initItems() {
     $("#add-items").find(".add-item").mousedown(function(e) {
+
+      console.log("heyyyy im here");
       var modelUrl = $(this).attr("model-url");
+      console.log("heyyyy im here1");
       var itemType = parseInt($(this).attr("model-type"));
+      var itemId = parseInt($(this).attr("item-id"));
+      console.log("heyyyy im here2", itemId);
+      var itemName = $(this).attr("model-name");
+      console.log("heyyyy im here3");
       var metadata = {
-        itemName: $(this).attr("model-name"),
+        item_name: itemName,
         resizable: true,
-        modelUrl: modelUrl,
-        itemType: itemType
+        model_url: modelUrl,
+        item_type: itemType,
+        item_id: 0,
       }
-      room3d.model.scene.addItem(itemType, modelUrl, metadata);
-      setCurrentState(scope.states.DEFAULT);
+      let fullFloorplanObj = null;
+      fetch("../../../floorplan.json")
+        .then(response => response.json())
+        .then(json => {
+          console.log(json)
+          fullFloorplanObj = json;
+          console.log("heyyyy im here4", fullFloorplanObj);
+          console.log(fullFloorplanObj.timeline);
+          venue_start = fullFloorplanObj.timeline.start_time;
+          venue_end = fullFloorplanObj.timeline.end_time;
+          room3d.model.scene.addItemClicked(itemType, modelUrl, metadata, venue_start, venue_end);  
+          setCurrentState(scope.states.DEFAULT);
+        });
     });
   }
-
   init();
 
 }

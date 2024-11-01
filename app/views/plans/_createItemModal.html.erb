@@ -90,8 +90,8 @@
         document.getElementById('createItemDepth').value = item.depth;
         document.getElementById('createItemRotation').value = 0;
         document.getElementById('createItemSetupStartTime').value = parseDateTime(setupStartTime);
-        document.getElementById('createItemSetupEndTime').value = parseDateTime(setupEndTime);
-        document.getElementById('createItemBreakdownStartTime').value = parseDateTime(setupStartTime);
+        document.getElementById('createItemSetupEndTime').value = parseDateTime(setupStartTime);
+        document.getElementById('createItemBreakdownStartTime').value = parseDateTime(setupEndTime);
         document.getElementById('createItemBreakdownEndTime').value = parseDateTime(setupEndTime);
 
         // Set the onclick function for the confirm button
@@ -153,7 +153,6 @@
                 ypos: item.ypos,
                 zpos: item.zpos,
                 step_id: selectedStepId,
-
                 setup_start_time: item.setupStartTime,
                 setup_end_time: item.setupEndTime,
                 breakdown_start_time: item.breakdownStartTime,

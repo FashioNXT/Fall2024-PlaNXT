@@ -1,7 +1,7 @@
 {
   "RSpec": {
     "coverage": {
-      "/mnt/c/Users/mahim/Documents/software/Fall2024-PlaNXT/lib/omniauth/strategies/events360.rb": {
+      "/mnt/c/Users/joshi/Documents/cs/tamu/csce606swe/Fall2024-PlaNXT/lib/omniauth/strategies/events360.rb": {
         "lines": [
           null,
           null,
@@ -35,7 +35,7 @@
           null
         ]
       },
-      "/mnt/c/Users/mahim/Documents/software/Fall2024-PlaNXT/app/helpers/application_helper.rb": {
+      "/mnt/c/Users/joshi/Documents/cs/tamu/csce606swe/Fall2024-PlaNXT/app/helpers/application_helper.rb": {
         "lines": [
           null,
           null,
@@ -43,7 +43,7 @@
           null
         ]
       },
-      "/mnt/c/Users/mahim/Documents/software/Fall2024-PlaNXT/app/helpers/items_helper.rb": {
+      "/mnt/c/Users/joshi/Documents/cs/tamu/csce606swe/Fall2024-PlaNXT/app/helpers/items_helper.rb": {
         "lines": [
           null,
           null,
@@ -51,7 +51,7 @@
           null
         ]
       },
-      "/mnt/c/Users/mahim/Documents/software/Fall2024-PlaNXT/app/helpers/plans_helper.rb": {
+      "/mnt/c/Users/joshi/Documents/cs/tamu/csce606swe/Fall2024-PlaNXT/app/helpers/plans_helper.rb": {
         "lines": [
           null,
           null,
@@ -59,7 +59,7 @@
           null
         ]
       },
-      "/mnt/c/Users/mahim/Documents/software/Fall2024-PlaNXT/app/helpers/steps_helper.rb": {
+      "/mnt/c/Users/joshi/Documents/cs/tamu/csce606swe/Fall2024-PlaNXT/app/helpers/steps_helper.rb": {
         "lines": [
           null,
           null,
@@ -67,17 +67,7 @@
           null
         ]
       },
-      "/mnt/c/Users/mahim/Documents/software/Fall2024-PlaNXT/app/channels/application_cable/channel.rb": {
-        "lines": [
-          null,
-          null,
-          1,
-          1,
-          null,
-          null
-        ]
-      },
-      "/mnt/c/Users/mahim/Documents/software/Fall2024-PlaNXT/app/channels/application_cable/connection.rb": {
+      "/mnt/c/Users/joshi/Documents/cs/tamu/csce606swe/Fall2024-PlaNXT/app/channels/application_cable/channel.rb": {
         "lines": [
           null,
           null,
@@ -87,7 +77,17 @@
           null
         ]
       },
-      "/mnt/c/Users/mahim/Documents/software/Fall2024-PlaNXT/app/controllers/application_controller.rb": {
+      "/mnt/c/Users/joshi/Documents/cs/tamu/csce606swe/Fall2024-PlaNXT/app/channels/application_cable/connection.rb": {
+        "lines": [
+          null,
+          null,
+          1,
+          1,
+          null,
+          null
+        ]
+      },
+      "/mnt/c/Users/joshi/Documents/cs/tamu/csce606swe/Fall2024-PlaNXT/app/controllers/application_controller.rb": {
         "lines": [
           null,
           null,
@@ -95,7 +95,7 @@
           1,
           1,
           null,
-          38,
+          35,
           null,
           null,
           1,
@@ -105,7 +105,7 @@
           null
         ]
       },
-      "/mnt/c/Users/mahim/Documents/software/Fall2024-PlaNXT/app/controllers/blueprints_controller.rb": {
+      "/mnt/c/Users/joshi/Documents/cs/tamu/csce606swe/Fall2024-PlaNXT/app/controllers/blueprints_controller.rb": {
         "lines": [
           null,
           null,
@@ -121,7 +121,7 @@
           null
         ]
       },
-      "/mnt/c/Users/mahim/Documents/software/Fall2024-PlaNXT/app/controllers/home_controller.rb": {
+      "/mnt/c/Users/joshi/Documents/cs/tamu/csce606swe/Fall2024-PlaNXT/app/controllers/home_controller.rb": {
         "lines": [
           null,
           null,
@@ -130,7 +130,7 @@
           null
         ]
       },
-      "/mnt/c/Users/mahim/Documents/software/Fall2024-PlaNXT/app/controllers/items_controller.rb": {
+      "/mnt/c/Users/joshi/Documents/cs/tamu/csce606swe/Fall2024-PlaNXT/app/controllers/items_controller.rb": {
         "lines": [
           null,
           null,
@@ -174,6 +174,7 @@
           null,
           null,
           1,
+          0,
           0,
           null,
           null,
@@ -195,7 +196,7 @@
           null
         ]
       },
-      "/mnt/c/Users/mahim/Documents/software/Fall2024-PlaNXT/app/controllers/plans_controller.rb": {
+      "/mnt/c/Users/joshi/Documents/cs/tamu/csce606swe/Fall2024-PlaNXT/app/controllers/plans_controller.rb": {
         "lines": [
           null,
           null,
@@ -204,7 +205,7 @@
           null,
           1,
           null,
-          19,
+          16,
           null,
           null,
           null,
@@ -305,38 +306,24 @@
           null,
           1,
           1,
+          1,
+          1,
           null,
           null,
           1,
-          4,
-          4,
+          1,
           null,
-          4,
-          4,
+          1,
+          1,
           null,
           null,
-          4,
-          null,
+          1,
           null,
           null,
           null,
           null,
           null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          4,
-          4,
+          1,
           null,
           null,
           null,
@@ -352,9 +339,36 @@
           null,
           null,
           null,
-          4,
           null,
-          4,
+          null,
+          null,
+          null,
+          1,
+          2,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+          null,
+          1,
           null,
           null,
           null,
@@ -427,7 +441,7 @@
           null,
           3,
           7,
-          3,
+          5,
           4,
           null,
           null,
@@ -465,7 +479,7 @@
           null
         ]
       },
-      "/mnt/c/Users/mahim/Documents/software/Fall2024-PlaNXT/app/models/plan.rb": {
+      "/mnt/c/Users/joshi/Documents/cs/tamu/csce606swe/Fall2024-PlaNXT/app/models/plan.rb": {
         "lines": [
           null,
           null,
@@ -476,7 +490,27 @@
           null
         ]
       },
-      "/mnt/c/Users/mahim/Documents/software/Fall2024-PlaNXT/app/controllers/sessions_controller.rb": {
+      "/mnt/c/Users/joshi/Documents/cs/tamu/csce606swe/Fall2024-PlaNXT/app/models/step.rb": {
+        "lines": [
+          null,
+          null,
+          1,
+          1,
+          1,
+          1,
+          null
+        ]
+      },
+      "/mnt/c/Users/joshi/Documents/cs/tamu/csce606swe/Fall2024-PlaNXT/app/models/item.rb": {
+        "lines": [
+          null,
+          null,
+          1,
+          1,
+          null
+        ]
+      },
+      "/mnt/c/Users/joshi/Documents/cs/tamu/csce606swe/Fall2024-PlaNXT/app/controllers/sessions_controller.rb": {
         "lines": [
           null,
           null,
@@ -515,7 +549,7 @@
           null
         ]
       },
-      "/mnt/c/Users/mahim/Documents/software/Fall2024-PlaNXT/app/jobs/application_job.rb": {
+      "/mnt/c/Users/joshi/Documents/cs/tamu/csce606swe/Fall2024-PlaNXT/app/jobs/application_job.rb": {
         "lines": [
           null,
           null,
@@ -528,7 +562,7 @@
           null
         ]
       },
-      "/mnt/c/Users/mahim/Documents/software/Fall2024-PlaNXT/app/mailers/application_mailer.rb": {
+      "/mnt/c/Users/joshi/Documents/cs/tamu/csce606swe/Fall2024-PlaNXT/app/mailers/application_mailer.rb": {
         "lines": [
           null,
           null,
@@ -543,7 +577,7 @@
           null
         ]
       },
-      "/mnt/c/Users/mahim/Documents/software/Fall2024-PlaNXT/app/models/user.rb": {
+      "/mnt/c/Users/joshi/Documents/cs/tamu/csce606swe/Fall2024-PlaNXT/app/models/user.rb": {
         "lines": [
           null,
           null,
@@ -578,27 +612,7 @@
           null
         ]
       },
-      "/mnt/c/Users/mahim/Documents/software/Fall2024-PlaNXT/app/models/application_record.rb": {
-        "lines": [
-          null,
-          null,
-          1,
-          1,
-          null
-        ]
-      },
-      "/mnt/c/Users/mahim/Documents/software/Fall2024-PlaNXT/app/models/step.rb": {
-        "lines": [
-          null,
-          null,
-          1,
-          1,
-          1,
-          1,
-          null
-        ]
-      },
-      "/mnt/c/Users/mahim/Documents/software/Fall2024-PlaNXT/app/models/item.rb": {
+      "/mnt/c/Users/joshi/Documents/cs/tamu/csce606swe/Fall2024-PlaNXT/app/models/application_record.rb": {
         "lines": [
           null,
           null,
@@ -608,6 +622,6 @@
         ]
       }
     },
-    "timestamp": 1728103735
+    "timestamp": 1731132749
   }
 }

@@ -71,6 +71,7 @@ RSpec.describe PlansController, type: :controller do
   Plan.destroy_all
 
   plan1 = Plan.create(name: 'Test1', owner: 'Morris', venue_length: 100, venue_width: 100)
+  step = plan1.steps.create!(start_time: Time.zone.now, end_time: Time.zone.now + 2.hours)
   Plan.create(name: 'Test2', owner: 'Morris', venue_length: 100, venue_width: 100)
 
   describe 'when trying to view the home page' do
@@ -157,41 +158,6 @@ RSpec.describe PlansController, type: :controller do
     end
   end
 
-  # add tests for floorplans2d
-  describe '#preview3d' do
-    let(:snapshot_data_json) do
-      '{"venue_width": 100, "venue_length": 200, "items": {"item1":
-      {"item_name": "Chair", "item_type": "furniture", "item_model": "chair_model",
-      "item_xpos": 10, "item_zpos": 20}}}'
-    end
-    let(:file_path) { Rails.root.join('public', 'floorplan.json') }
-    let(:blueprints_path) { '/path_to_blueprints' } # adjust as necessary
-
-    before do
-      allow(controller).to receive(:blueprints_path).and_return(blueprints_path)
-      allow(File).to receive(:read).and_return('{ "floorplan": {"corners": {}}, "items": [] }')
-      allow(File).to receive(:write)
-      post :preview3d, params: { snapshot_data: snapshot_data_json }
-    end
-
-    it 'parses the snapshot data correctly' do
-      # Test the parsing logic here
-    end
-
-    it 'modifies the json_content based on snapshot_data' do
-      # Test the modifications to json_content
-    end
-
-    it 'writes the correct content to floorplan.json' do
-      expect(File).to have_received(:write).with(file_path, anything)
-      # You can also test the contents written to the file if necessary
-    end
-
-    it 'redirects to the blueprints path' do
-      expect(response).to redirect_to(blueprints_path)
-    end
-  end
-
   # test for submit button
   describe PlansController, type: :controller do
     describe 'POST #upload_existing_plan' do
@@ -209,4 +175,29 @@ RSpec.describe PlansController, type: :controller do
       end
     end
   end
+
+  describe PlansController, type: :controller do
+    describe 'preview3d' do
+      let(:file_path) { Rails.root.join('public', 'floorplan.json') }
+      
+      it 'writes floorplan' do
+        plan = Plan.create!(name: 'Test Plan', venue_length: 100, venue_width: 50, timezone: 'UTC',
+        created_at: Time.zone.now, updated_at: Time.zone.now, id: 0)
+        step = plan.steps.create!(start_time: Time.zone.now, end_time: Time.zone.now + 2.hours)
+        step.items.create!(name: 'Item 1', model: 'Model 1', width: 10, length: 20, depth: 5, rotation: 90,
+              xpos: 10, ypos: 20, zpos: 0, setup_start_time: Time.zone.now,
+              setup_end_time: Time.zone.now + 1.hour, breakdown_start_time: Time.zone.now + 3.hours,
+              breakdown_end_time: Time.zone.now + 4.hours)
+        step.items.create!(name: 'Item 2', model: 'Model 2', width: 15, length: 25, depth: 10, rotation: 45,
+              xpos: 15, ypos: 25, zpos: 5, setup_start_time: Time.zone.now,
+              setup_end_time: Time.zone.now + 1.hour, breakdown_start_time: Time.zone.now + 3.hours,
+              breakdown_end_time: Time.zone.now + 4.hours)
+        
+        allow(File).to receive(:write)
+        get :preview3d, params: { id: 0 }
+        expect(File).to have_received(:write).with(file_path, anything)
+      end
+    end
+  end
+
 end

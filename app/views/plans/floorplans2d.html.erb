@@ -268,7 +268,9 @@
 
       for( item of items){
         var droppedElementId = "item-"
+        console.log("mainnnnnnnnn", item)
         for(let itemType in itemTemplates){
+          console.log("itemmmmmmmmm", itemType)
           if (itemTemplates[itemType].displayName == item.name){
             droppedElementId += itemType;
             break;
@@ -313,6 +315,7 @@
         // Add table row when new item is dragged and placed with newly generated ID
         addTableRow(item.id);
       }
+      console.log("added table row");
 
       showItems(stepId);
     }
@@ -334,11 +337,14 @@
         div.draggable = 'true';
         div.id = `item-${item_type}`;
 
+        console.log("printing ", `${item.width}px`, `${item.depth}px`)
+
         if (item.image){
           div.style.backgroundImage = `url(${item.image})`;
           div.style.backgroundSize = 'contain';
           div.style.backgroundRepeat = 'no-repeat';
           div.style.backgroundPosition = 'center';
+
         }
         
         container.appendChild(div);
@@ -355,11 +361,15 @@
 
     function createItem(droppedElementId, item){
       const element = document.getElementById(droppedElementId);
+      console.log("droppppppppppppppp");
+      console.log(element);
+      console.log(droppedElementId,item);
       const clonedElement = element.cloneNode(true);
       var inch2feet = 1/12;
 
       var x = (item.xpos - inch2feet*item.width/2)*ratio;
       var y = (item.zpos - inch2feet*item.depth/2)*ratio;
+      console.log("adding items", item.width, item.depth);
 
       clonedElement.style.position = 'absolute';
       clonedElement.style.left = `${x}px`;
@@ -384,10 +394,13 @@
 
       clonedElement.setAttribute('data-cloned', 'true');  
 
+
       // set width, height, rotation, description
       clonedElement.style.width = `${inch2feet* item.width*ratio}px`;
       clonedElement.style.height = `${inch2feet* item.depth*ratio}px`;
       clonedElement.style.transform = `rotate(${item.rotation}deg)`;
+
+      console.log("printing ", `${item.width}px`, `${item.depth}px`, `${inch2feet* item.width*ratio}px`, `${inch2feet* item.depth*ratio}px`)
       
       dropzone.appendChild(clonedElement);
       makeDraggable(clonedElement);
@@ -413,7 +426,9 @@
       inch2feet = 1/12;
       if (!element.getAttribute('data-cloned')) {
         openCreateModal(item_type, item, x, y, ratio, selectedStepId, loadItems);
+        console.log("doneeeeeeeeeeeeeee");
       } else {
+        console.log("elseeeeeeeeeeeeeeeeeeeeee")
         element.style.position = 'absolute';
         element.style.left = `${x}px`;
         element.style.top = `${y}px`;

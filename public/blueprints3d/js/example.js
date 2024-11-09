@@ -136,6 +136,25 @@ var ContextMenu = function(room3d) {
       inToCm($("#item-width").val()),
       inToCm($("#item-depth").val())
     );
+    console.log("selected",selectedItem);
+    fetch(`/items/${selectedItem.metadata.item_id}`, {
+      method: 'PUT',
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-Token": document.querySelector("[name='csrf-token']").content
+      },
+      body: JSON.stringify({ item: {
+        width: inToCm($("#item-width").val()),
+        depth: inToCm($("#item-depth").val()),
+        } 
+      })
+      })
+      .then(data => {
+      console.log('Item updated successfully:', data);
+      })
+      .catch((error) => {
+      console.error('Error updating item:', error);
+      });
   }
 
   function initResize() {
@@ -327,14 +346,10 @@ var SideMenu = function(room3d, floorplanControls, modalEffects) {
   function initItems() {
     $("#add-items").find(".add-item").mousedown(function(e) {
 
-      console.log("heyyyy im here");
       var modelUrl = $(this).attr("model-url");
-      console.log("heyyyy im here1");
       var itemType = parseInt($(this).attr("model-type"));
       var itemId = parseInt($(this).attr("item-id"));
-      console.log("heyyyy im here2", itemId);
       var itemName = $(this).attr("model-name");
-      console.log("heyyyy im here3");
       var metadata = {
         item_name: itemName,
         resizable: true,
@@ -346,10 +361,7 @@ var SideMenu = function(room3d, floorplanControls, modalEffects) {
       fetch("../../../floorplan.json")
         .then(response => response.json())
         .then(json => {
-          console.log(json)
           fullFloorplanObj = json;
-          console.log("heyyyy im here4", fullFloorplanObj);
-          console.log(fullFloorplanObj.timeline);
           venue_start = fullFloorplanObj.timeline.start_time;
           venue_end = fullFloorplanObj.timeline.end_time;
           room3d.model.scene.addItemClicked(itemType, modelUrl, metadata, venue_start, venue_end);  
@@ -607,7 +619,6 @@ $(document).ready(function() {
   fetch("../../floorplan.json")
   .then(response => response.json())
   .then(json => {
-    console.log(json)
     fullFloorplanObj = json;
     setupTimelineBar();
     updateViewFromTimeline();

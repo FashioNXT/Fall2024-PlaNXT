@@ -90,8 +90,8 @@
         document.getElementById('createItemDepth').value = item.depth;
         document.getElementById('createItemRotation').value = 0;
         document.getElementById('createItemSetupStartTime').value = parseDateTime(setupStartTime);
-        document.getElementById('createItemSetupEndTime').value = parseDateTime(setupStartTime);
-        document.getElementById('createItemBreakdownStartTime').value = parseDateTime(setupEndTime);
+        document.getElementById('createItemSetupEndTime').value = parseDateTime(setupEndTime);
+        document.getElementById('createItemBreakdownStartTime').value = parseDateTime(setupStartTime);
         document.getElementById('createItemBreakdownEndTime').value = parseDateTime(setupEndTime);
 
         // Set the onclick function for the confirm button
@@ -110,6 +110,7 @@
             console.log(setupStartTime);
 
             // Create the item
+            console.log("width and depth", width,depth);
             createItem({
                 type: item_type,
                 real_type: item.real_type,
@@ -162,7 +163,7 @@
           })
         })
         .then(data => {
-          // console.log('Item created successfully:', data);
+        //   console.log('Item created successfully:', data);
           loadItems(selectedStepId);
         })
         .catch((error) => {

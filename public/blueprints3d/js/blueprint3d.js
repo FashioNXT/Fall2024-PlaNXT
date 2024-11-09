@@ -10526,7 +10526,6 @@ THREE.Quaternion.prototype = {
 		var s1 = Math.sin( euler._x / 2 );
 		var s2 = Math.sin( euler._y / 2 );
 		var s3 = Math.sin( euler._z / 2 );
-
 		if ( euler.order === 'XYZ' ) {
 
 			this._x = s1 * c2 * c3 + c1 * s2 * s3;
@@ -10582,7 +10581,6 @@ THREE.Quaternion.prototype = {
 		// http://www.euclideanspace.com/maths/geometry/rotations/conversions/angleToQuaternion/index.htm
 
 		// assumes axis is normalized
-
 		var halfAngle = angle / 2, s = Math.sin( halfAngle );
 
 		this._x = axis.x * s;
@@ -17066,8 +17064,9 @@ THREE.Object3D = function () {
 	var quaternion = new THREE.Quaternion();
 	var scale = new THREE.Vector3( 1, 1, 1 );
 
-	var onRotationChange = function () {
+	var onRotationChange = function () {		
 		quaternion.setFromEuler( rotation, false );
+		var radians = rotation.y > 0 ? rotation.y : 2 * Math.PI + rotation.y;
 	};
 
 	var onQuaternionChange = function () {
@@ -45108,7 +45107,6 @@ var FloorItem = function(three, metadata, geometry, material, position, rotation
 FloorItem.prototype = Object.create(Item.prototype);
 
 FloorItem.prototype.placeInRoom = function() {
-    console.log('placeInRoom');
     if (!this.position_set) {
         var center = this.model.floorplan.getCenter();
         this.position.x = center.x;
@@ -45387,8 +45385,50 @@ Item.prototype.rotate = function(intersection) {
         }
 
         this.rotation.y = angle;
+		const radians = angle > 0 ? angle : 2 * Math.PI + angle;
+		var degrees = THREE.Math.radToDeg(radians);
+		if(degrees==360){
+			degrees = 0;
+		}
+
+		this.updateRotationAfterDelay(degrees);
     }
 }
+
+// Store the timeout function for delaying rotation update
+Item.prototype.updateRotationAfterDelay = function(degrees) {
+    // Clear any previous pending timeout (if rotation is still ongoing)
+    if (this.rotationTimeout) {
+        clearTimeout(this.rotationTimeout);
+    }
+
+    // Set a new timeout to update the rotation after a short delay (500ms or so)
+    this.rotationTimeout = setTimeout(() => {
+        this.sendRotationUpdate(degrees);
+    }, 500); // Adjust delay as needed
+};
+
+// Send rotation update to the server
+Item.prototype.sendRotationUpdate = function(degrees) {
+	console.log("rotated", degrees)
+    fetch(`/items/${this.metadata.item_id}`, {
+        method: 'PUT',
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-Token": document.querySelector("[name='csrf-token']").content
+        },
+        body: JSON.stringify({
+            item: { rotation: degrees }
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Item updated successfully:', data);
+    })
+    .catch((error) => {
+        console.error('Error updating item:', error);
+    });
+};
 
 Item.prototype.moveToPosition = function(vec3, intersection) {
     this.position.copy(vec3);
@@ -47025,7 +47065,6 @@ var Scene = function(model, textureDir) {
       utils.removeValue(items, item);
     }
 	console.log("removing item");
-	console.log(item);
 
 
 	fetch(`/items/${item.metadata.item_id}`, {
@@ -47044,8 +47083,16 @@ var Scene = function(model, textureDir) {
 	  });
   }
 
+//   function inToCm(inches) {
+//     return inches * 2.54;
+//   }
+
   this.addItem = function(itemType, fileName, metadata, position, rotation, scale, fixed) {
     itemType = itemType || 1;
+	var degrees = metadata.rotation;
+	var radians = THREE.Math.degToRad(degrees);
+	rotation = radians;
+	
 
     var loaderCallback = function(geometry, materials) {
       var item = new item_types[itemType](
@@ -47054,6 +47101,10 @@ var Scene = function(model, textureDir) {
         new THREE.MeshFaceMaterial(materials),
         position, rotation, scale
       );
+	  var x = (metadata.width*2.54) / item.getWidth();
+  	  var y = scale.y;
+	  var z = (metadata.depth*2.54) / item.getDepth();
+	  item.setScale(x, y, z);
       item.fixed = fixed || false;
       items.push(item);
       scope.add(item);
@@ -47062,7 +47113,6 @@ var Scene = function(model, textureDir) {
     }
 
     scope.itemLoadingCallbacks.fire();
-    console.log(fileName, textureDir)
     loader.load(
       fileName,
       loaderCallback,
@@ -47072,7 +47122,6 @@ var Scene = function(model, textureDir) {
 
   this.addItemClicked = function(itemType, fileName, metadata, venue_start, venue_end, position, scale, rotation, fixed) {
 
-	console.log(itemType, fileName, metadata, venue_start, venue_end, position, scale, fixed)
 	//--------------------------------------------------------------------
 	// const createModal = new bootstrap.Modal(document.getElementById('createModal'));
 	const createModal = document.getElementById("createModal");
@@ -47096,9 +47145,7 @@ var Scene = function(model, textureDir) {
    
 
 		itemType = itemType || 1;
-		console.log("ffffffffffffffffffffffffff")
-		console.log(fileName);
-		console.log(metadata);
+
 
 
 		var loaderCallback = function(geometry, materials) {
@@ -47109,10 +47156,10 @@ var Scene = function(model, textureDir) {
 				new THREE.MeshFaceMaterial(materials),
 				position, rotation, scale
 			);
-			
+			console.log(item)
 			document.getElementById('createModalLabel').innerText = `Details: ${metadata.item_name}`;
-			document.getElementById('createItemWidth').value = item.getWidth();
-        	document.getElementById('createItemDepth').value = item.getDepth();
+			document.getElementById('createItemWidth').value = Math.round(item.getWidth()/2.54);
+        	document.getElementById('createItemDepth').value = Math.round(item.getDepth()/2.54);
 			document.getElementById('createItemRotation').value = 0;
 			document.getElementById('createItemSetupStartTime').value = parseDateTime(venue_start);
 			document.getElementById('createItemSetupEndTime').value = parseDateTime(venue_end);
@@ -47163,10 +47210,6 @@ var Scene = function(model, textureDir) {
 				breakdown_end_time: breakdownEndTime,
 			};
 
-			console.log("66666666666666666666666666666666");
-			console.log(itemData);
-			console.log("66666666666666666666666666666666");
-
 			fetch(`/items`, {
 			method: 'POST',
 			headers: {
@@ -47183,8 +47226,6 @@ var Scene = function(model, textureDir) {
 			.then(data => {
 				console.log("Item added successfully with ID:", data.id);
 				item.metadata.item_id = data.id;
-				console.log("new item data");
-				console.log(item);
 			})
 			.catch((error) => {
 			console.error('Error updating item:', error);
@@ -47199,14 +47240,11 @@ var Scene = function(model, textureDir) {
 			items.push(item);
 			scope.add(item);
 			item.initObject();
-			console.log("inittttttttttttttt");
-			console.log(item);
 			scope.itemLoadedCallbacks.fire(item);
 
 	}
 
 	scope.itemLoadingCallbacks.fire();
-    console.log(fileName, textureDir)
     loader.load(
       fileName,
       loaderCallback,

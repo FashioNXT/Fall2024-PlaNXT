@@ -41,6 +41,7 @@ class ItemsController < ApplicationController
   # @items to be used in plans_controller to download all data.
   def index
     @items = Item.all
+    render json: @items
   end
 
   private

@@ -74,6 +74,7 @@ Item.prototype.remove = function() {
 };
 
 Item.prototype.resize = function(height, width, depth) {
+    console.log("resizeeeeeeeeeeeeeeee", width, this.getWidth, depth, this.getDepth)
     var x = width / this.getWidth();
     var y = height / this.getHeight();
     var z = depth / this.getDepth();

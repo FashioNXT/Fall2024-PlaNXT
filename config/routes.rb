@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   # Not sure if this is right, need to reconcile with how you did it -Louis
   get 'plans/:id/preview3d', to: 'plans#preview3d'
 
+
   resources :steps
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -40,7 +41,14 @@ Rails.application.routes.draw do
     end
   end
 
+  # resources :items do
+  #   collection do
+  #     get 'item_counts'
+  #   end
+  # end
+
   get 'download_all_data', to: 'plans#download_all_data', as: 'download_all_data'
+
 
   # config/routes.rb
   post '/upload_existing_plan', to: 'plans#upload_existing_plan' # Defines a route for the upload_existing_plan action on plans controller.

@@ -41,6 +41,38 @@
           <!-- Dynamically rendered -->
         </div>
       </div>
+       <div class="accordion-item">
+        <h2 class="accordion-header">
+      <button id="openSummaryBtn" class="btn btn-primary">Show Summary</button>
+      </h2>
+      </div>
+        <hr />
+
+        <div id="itemsModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Items List</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table" id="itemsTable" style="margin-top: 3em">   
+                    <thead class="thead-light">
+                        <tr>
+                        <th style="vertical-align: middle;">Name</th>
+                        <th style="vertical-align: middle;">Count</th>
+                        </tr>
+                    </thead>
+                    <tbody id="items-summary-body">
+                        <!-- Table rows will be added dynamically -->
+                    </tbody>
+                    </table>
+                </div>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="col-6 dropzone-container">
       <div id="dropzone"></div>
@@ -109,7 +141,24 @@
 
   <div class="container">
     <div> 
-      <table class="table" id="itemsTable" style="margin-top: 3em">   
+
+      <table id="itemsTableee" class="display table" style="margin-top: 3em">
+        <thead class="thead-light">
+            <tr>
+                <th>Name</th>
+                <th>Item Type</th>
+                <th>Setup Start</th>
+                <th>Setup End</th>
+                <th>Breakdown Start</th>
+                <th>Breakdown End</th>
+            </tr>
+        </thead>
+        <tbody id="items-tables-body">
+            <!-- Table rows will be added dynamically -->
+        </tbody>
+    </table>
+
+      <%# <table class="table" id="itemsTable" style="margin-top: 3em">   
         <thead class="thead-light">
           <th style="vertical-align: middle;">Name</th>
           <th style="vertical-align: middle;">Item Type</th>
@@ -122,7 +171,7 @@
           <!-- Table rows will be added dynamically -->
 
         </tbody>
-      </table>
+      </table> %>
     <div>
 
     <div class="button-container d-flex" style="margin-top: 3em">
@@ -257,6 +306,39 @@
       }
     }
 
+    function renderTable() {
+        fetch(`/items`)
+        .then(response => response.json())
+        .then(items => {
+            const tableBody = document.getElementById('items-tables-body');
+            tableBody.innerHTML = ''; 
+            
+            items.forEach((item, index) => {
+                const setupStartTime = parseDateTime(item.setup_start_time, true);
+                const setupEndTime = parseDateTime(item.setup_end_time, true);
+                const breakdownStartTime = parseDateTime(item.breakdown_start_time, true);
+                const breakdownEndTime = parseDateTime(item.breakdown_end_time, true);
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                <td>item-${index+1}</td>
+                <td>${item.name}</td>
+                <td>${setupStartTime}</td>
+                <td>${setupEndTime}</td>
+                <td>${breakdownStartTime}</td>
+                <td>${breakdownEndTime}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+        // Initialize DataTable
+        $('#itemsTableee').DataTable();
+        })
+        .catch(error => {
+            console.error('Error fetching items:', error);
+        });
+    }
+    renderTable();
+
 
     function showItems(step_id){
 
@@ -268,9 +350,7 @@
 
       for( item of items){
         var droppedElementId = "item-"
-        console.log("mainnnnnnnnn", item)
         for(let itemType in itemTemplates){
-          console.log("itemmmmmmmmm", itemType)
           if (itemTemplates[itemType].displayName == item.name){
             droppedElementId += itemType;
             break;
@@ -298,8 +378,8 @@
       items.length = 0;
 
       // clear all table rows
-      const tableBody = document.getElementById('items-table-body');
-      tableBody.innerHTML = '';
+      // const tableBody = document.getElementById('items-table-body');
+      // tableBody.innerHTML = '';
 
       var _items = await searchItemsByStep(stepId);
 
@@ -313,9 +393,8 @@
         }
         items.push(item);
         // Add table row when new item is dragged and placed with newly generated ID
-        addTableRow(item.id);
+        // addTableRow(item.id);
       }
-      console.log("added table row");
 
       showItems(stepId);
     }
@@ -337,8 +416,6 @@
         div.draggable = 'true';
         div.id = `item-${item_type}`;
 
-        console.log("printing ", `${item.width}px`, `${item.depth}px`)
-
         if (item.image){
           div.style.backgroundImage = `url(${item.image})`;
           div.style.backgroundSize = 'contain';
@@ -352,6 +429,43 @@
       }
     }
 
+    document.getElementById('openSummaryBtn').addEventListener('click', function() {
+    // Show the modal
+    $('#itemsModal').modal('show');
+
+  fetch('/items')  // Fetch all items from the /items endpoint
+  .then(response => response.json())
+  .then(items => {
+      const tableBody = document.getElementById('items-summary-body');
+      tableBody.innerHTML = '';  // Clear existing rows
+
+      // Create an object to store counts of item names
+      const itemCounts = {};
+
+      // Iterate over the items and count occurrences of each name
+      items.forEach(item => {
+          const name = item.name;
+          if (itemCounts[name]) {
+              itemCounts[name] += 1;  // Increment the count for this name
+          } else {
+              itemCounts[name] = 1;  // Initialize count for this name
+          }
+      })
+      Object.keys(itemCounts).forEach((name, index) => {
+            const count = itemCounts[name];
+
+            const newRow = tableBody.insertRow();
+            newRow.innerHTML = `
+                <td>${name}</td>
+                <td>${count}</td>
+            `;
+        });
+    })
+    .catch(error => {
+      console.error('Error fetching items:', error);
+    });
+});
+
     function handleDragStart(e) {
       e.dataTransfer.setData('text/plain', this.id);
       const rect = this.getBoundingClientRect();
@@ -361,15 +475,11 @@
 
     function createItem(droppedElementId, item){
       const element = document.getElementById(droppedElementId);
-      console.log("droppppppppppppppp");
-      console.log(element);
-      console.log(droppedElementId,item);
       const clonedElement = element.cloneNode(true);
       var inch2feet = 1/12;
 
       var x = (item.xpos - inch2feet*item.width/2)*ratio;
       var y = (item.zpos - inch2feet*item.depth/2)*ratio;
-      console.log("adding items", item.width, item.depth);
 
       clonedElement.style.position = 'absolute';
       clonedElement.style.left = `${x}px`;
@@ -400,7 +510,6 @@
       clonedElement.style.height = `${inch2feet* item.depth*ratio}px`;
       clonedElement.style.transform = `rotate(${item.rotation}deg)`;
 
-      console.log("printing ", `${item.width}px`, `${item.depth}px`, `${inch2feet* item.width*ratio}px`, `${inch2feet* item.depth*ratio}px`)
       
       dropzone.appendChild(clonedElement);
       makeDraggable(clonedElement);
@@ -426,9 +535,7 @@
       inch2feet = 1/12;
       if (!element.getAttribute('data-cloned')) {
         openCreateModal(item_type, item, x, y, ratio, selectedStepId, loadItems);
-        console.log("doneeeeeeeeeeeeeee");
       } else {
-        console.log("elseeeeeeeeeeeeeeeeeeeeee")
         element.style.position = 'absolute';
         element.style.left = `${x}px`;
         element.style.top = `${y}px`;
@@ -490,25 +597,25 @@
     const tableBody = document.getElementById('items-table-body');
     
     // Function to add a new row to the table
-    function addTableRow(itemId) {
+    // function addTableRow(itemId) {
 
-      var item = items.find(item => item.id == itemId);
-      var setupStartTime = parseDateTime(item.setup_start_time, true);
-      var setupEndTime = parseDateTime(item.setup_end_time, true);
-      var breakdownStartTime = parseDateTime(item.breakdown_start_time, true);
-      var breakdownEndTime = parseDateTime(item.breakdown_end_time, true);
+    //   var item = items.find(item => item.id == itemId);
+    //   var setupStartTime = parseDateTime(item.setup_start_time, true);
+    //   var setupEndTime = parseDateTime(item.setup_end_time, true);
+    //   var breakdownStartTime = parseDateTime(item.breakdown_start_time, true);
+    //   var breakdownEndTime = parseDateTime(item.breakdown_end_time, true);
 
-      const newRow = tableBody.insertRow();
+    //   const newRow = tableBody.insertRow();
 
-      newRow.innerHTML = `
-        <td>item-${items.length}</td>
-        <td>${item.name}</td>
-        <td>${setupStartTime}</td>
-        <td>${setupEndTime}</td>
-        <td>${breakdownStartTime}</td>
-        <td>${breakdownEndTime}</td>
-      `;
-    }
+    //   newRow.innerHTML = `
+    //     <td>item-${items.length}</td>
+    //     <td>${item.name}</td>
+    //     <td>${setupStartTime}</td>
+    //     <td>${setupEndTime}</td>
+    //     <td>${breakdownStartTime}</td>
+    //     <td>${breakdownEndTime}</td>
+    //   `;
+    // }
     
     // Function to remove a row from the table
     function removeTableRow(itemId) {
@@ -549,7 +656,6 @@
         };
         for (let i = 0; i < items.length; i++) {
           const item = items[i];
-          console.log(item)
           const itemID = item.id;
           snapshot.items[itemID] = {
             item_name: item.name,
@@ -698,6 +804,7 @@
   .accordion-collapse {
     padding: 1em;
     width: 100% !important;
+    align-items: center;
   }
 
   .dropzone-container {
@@ -724,5 +831,107 @@
     color: #6c757d; /* This is Bootstrap's default for disabled text */
     pointer-events: none; /* This prevents the label from receiving mouse events */
   }
+
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1055; /* Adjust z-index as needed for layering */
+    display: none; /* Hidden by default */
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+}
+.modal-dialog {
+    max-width: 800px; /* Max width for larger dialogs */
+    margin: 1.75rem auto; /* Center the dialog */
+}
+.modal-content {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    max-height: 90vh; 
+    width: 100%;
+    background-color: #fff; /* White background for the modal */
+    border: 1px solid rgba(0, 0, 0, 0.2); /* Light border */
+    border-radius: 0.3rem; /* Rounded corners */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3); /* Subtle shadow */
+}
+/* Header styles */
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem; /* Padding around header */
+    border-bottom: 1px solid #dee2e6; /* Border below header */
+}
+.modal-title {
+    margin: 0; /* Remove default margin */
+    font-size: 1.5rem; /* Larger title */
+}
+#openSummaryBtn{
+  margin-left: 10px;
+}
+/* Close button */
+.btn-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem; /* Bigger close button */
+    cursor: pointer; /* Pointer cursor on hover */
+}
+/* Body styles */
+.modal-body {
+    padding: 1rem; /* Padding around body */
+}
+.row {
+    margin-bottom: 1rem; /* Space between rows */
+}
+/* Form control styles */
+.form-control {
+    display: block;
+    width: 100%; /* Full width input */
+    padding: 0.375rem 0.75rem; /* Padding */
+    font-size: 1rem; /* Font size */
+    line-height: 1.5; /* Line height */
+    color: #495057; /* Text color */
+    background-color: #fff; /* White background */
+    border: 1px solid #ced4da; /* Light border */
+    border-radius: 0.25rem; /* Rounded corners */
+}
+/* Footer styles */
+.modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem; /* Padding around footer */
+    border-top: 1px solid #dee2e6; /* Border above footer */
+}
+/* Button styles */
+.btn {
+    padding: 0.375rem 0.75rem; /* Padding */
+    font-size: 1rem; /* Font size */
+    font-weight: 400; /* Font weight */
+    text-align: center; /* Centered text */
+    border: 1px solid transparent; /* Default border */
+    border-radius: 0.25rem; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor */
+}
+.btn-primary {
+    color: #fff; /* White text */
+    background-color: #007bff; /* Primary color */
+    border-color: #007bff; /* Border matching primary color */
+}
+.btn-secondary {
+    color: #fff; /* White text */
+    background-color: #6c757d; /* Secondary color */
+    border-color: #6c757d; /* Border matching secondary color */
+}
+/* Optional: Style for disabled button state */
+.btn:disabled {
+    opacity: 0.65; /* Slightly transparent */
+    cursor: not-allowed; /* Not-allowed cursor */
+}
 
 </style>

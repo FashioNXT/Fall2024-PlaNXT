@@ -7,11 +7,31 @@ class ItemsController < ApplicationController
 
   # POST /items or /items.json
   def create
-    @item = Item.new(item_params)
+    #Rails.logger.debug "Received dependencies: #{params[:item][:dependencies]}" 
+    Rails.logger.debug "Item params: #{item_params.inspect}"
+    puts "Item params: #{item_params.inspect}" # Use puts for direct output if logging isn't working
+
+    #@item = Item.new(item_params)
+    @item = Item.new(item_params.except(:dependencies))
 
     if @item.save
-      if params[:item][:dependencies]
-        @item.dependencies = Item.find(params[:item][:dependencies])
+      if params[:item][:dependencies].present?
+        Rails.logger.debug("Dependencies: #{params[:item][:dependencies].inspect}") # anprasa
+        #@item.dependencies = Item.find(params[:item][:dependencies])
+        #@item.dependencies = Item.where(id: params[:item][:dependencies])
+        # dependencies = Item.where(id: params[:item][:dependencies].map(&:to_i))
+        # @item.dependencies = dependencies
+        #dependency_ids = params[:item][:dependencies].map { |id| id.to_i }
+        dependency_ids = params[:item][:dependencies].map(&:to_i)
+        #Rails.logger.debug "Converted dependency IDs: #{dependency_ids}" 
+        puts "Converted dependency IDs: #{dependency_ids}" # anprasa
+        dependencies = Item.where(id: dependency_ids)
+        #Rails.logger.debug "Fetched dependencies: #{dependencies.inspect}" 
+        puts "Fetched dependencies: #{dependencies.inspect}" # anprasa
+
+      
+        # Assign the dependencies
+        @item.dependencies = dependencies
         #params[:item][:dependencies].each do |dependency_id|
           #ItemDependency.create(item_id: @item.id, dependent_item_id: dependency_id)
         #end
@@ -63,7 +83,7 @@ class ItemsController < ApplicationController
       :name, :model, :width, :length, :depth, :rotation, :description,
       :xpos, :ypos, :zpos, :step_id, :setup_start_time, :setup_end_time,
       :breakdown_start_time, :breakdown_end_time,
-      #dependencies: []
+      dependencies: []
     )
   end
 end

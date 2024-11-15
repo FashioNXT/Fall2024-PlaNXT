@@ -10,12 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_11_15_071553) do
+ActiveRecord::Schema[7.0].define(version: 2024_11_15_134002) do
   create_table "item_dependencies", force: :cascade do |t|
     t.integer "item_id"
     t.integer "dependency_id"
-    t.index ["dependency_id"], name: "index_item_dependencies_on_dependency_id"
-    t.index ["item_id"], name: "index_item_dependencies_on_item_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "items", force: :cascade do |t|

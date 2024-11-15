@@ -9,6 +9,9 @@ Rails.application.routes.draw do
       get :search # Defines a route for the search action on items controller.
       #get :fetch_all # New route to fetch all items
     end
+    member do
+      get :dependencies
+    end
   end
 
   # Not sure if this is right, need to reconcile with how you did it -Louis

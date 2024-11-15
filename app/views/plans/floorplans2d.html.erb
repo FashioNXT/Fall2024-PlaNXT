@@ -117,6 +117,7 @@
           <th style="vertical-align: middle;">Setup End</th>
           <th style="vertical-align: middle;">Breakdown Start</th>
           <th style="vertical-align: middle;">Breakdown End</th>
+          <th style="vertical-align: middle;"></th>
         </thead>
         <tbody id="items-table-body">
           <!-- Table rows will be added dynamically -->
@@ -507,7 +508,13 @@
         <td>${setupEndTime}</td>
         <td>${breakdownStartTime}</td>
         <td>${breakdownEndTime}</td>
+        <td><button class="view-dependencies-btn" data-item-id="${item.id}">View Dependencies</button></td>
       `;
+
+      // Add event listener for the "View dependencies" button
+      newRow.querySelector('.view-dependencies-btn').addEventListener('click', function() {
+      showItemDependencies(item.id);
+      });
     }
     
     // Function to remove a row from the table
@@ -522,6 +529,41 @@
         }
       }
     }
+
+    function showItemDependencies(itemId) {
+  // Fetch the item object and its dependencies from the backend
+  fetch(`/items/${itemId}/dependencies`) // You should implement this route on the server to return dependencies
+    .then(response => response.json())
+    .then(dependencies => {
+      const item = items.find(item => item.id == itemId);
+      
+      // Create and show the popup
+      const popup = document.createElement('div');
+      popup.className = 'popup';
+      popup.innerHTML = `
+        <div class="popup-content">
+          <h3>Dependencies for ${item.name}</h3>
+          <ul>
+            ${dependencies.map(dep => `<li>${dep.name}</li>`).join('')}
+          </ul>
+          <button class="close-popup">Close</button>
+        </div>
+      `;
+
+      // Append the popup to the body
+      document.body.appendChild(popup);
+
+      // Add event listener for closing the popup
+      popup.querySelector('.close-popup').addEventListener('click', function() {
+        document.body.removeChild(popup);
+      });
+    })
+    .catch(error => {
+      console.error('Error fetching dependencies:', error);
+    });
+}
+
+
 
 
     draggables.forEach(makeDraggable);
@@ -719,6 +761,62 @@
     width: 200px;
     border: 1px solid #000;
   }
+
+
+  .view-dependencies-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+
+  .view-dependencies-btn:hover {
+    background-color: #0056b3;
+  }
+
+  .popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .popup-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .popup-content ul {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  .popup-content li {
+    padding: 5px 0;
+  }
+
+  .close-popup {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+
+  .close-popup:hover {
+    background-color: #218838;
+  }
+
 
   .disabled-label {
     color: #6c757d; /* This is Bootstrap's default for disabled text */

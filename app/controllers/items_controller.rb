@@ -42,6 +42,16 @@ class ItemsController < ApplicationController
     end
   end
 
+  # Fetch dependencies for a specific item
+  def dependencies
+    @item = Item.find(params[:id])
+    @dependencies = @item.dependencies
+    #@dependencies = @item.dependencies.select(:id, :name)
+
+    # Return dependencies as JSON
+    render json: @dependencies
+  end
+
   # Search for items by step_id
   def search
     @items = Item.where(step_id: params[:step_id])

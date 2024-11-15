@@ -1,9 +1,13 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  # Favicon route to prevent errors
+  get '/favicon.ico', to: proc { [204, {}, []] }
+  
   resources :items do
     collection do
       get :search # Defines a route for the search action on items controller.
+      #get :fetch_all # New route to fetch all items
     end
   end
 

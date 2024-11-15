@@ -10,6 +10,12 @@ class ItemsController < ApplicationController
     @item = Item.new(item_params)
 
     if @item.save
+      if params[:item][:dependencies]
+        @item.dependencies = Item.find(params[:item][:dependencies])
+        #params[:item][:dependencies].each do |dependency_id|
+          #ItemDependency.create(item_id: @item.id, dependent_item_id: dependency_id)
+        #end
+      end
       render json: @item, status: :ok
     else
       render json: @item.errors, status: :unprocessable_entity
@@ -56,7 +62,8 @@ class ItemsController < ApplicationController
     params.require(:item).permit(
       :name, :model, :width, :length, :depth, :rotation, :description,
       :xpos, :ypos, :zpos, :step_id, :setup_start_time, :setup_end_time,
-      :breakdown_start_time, :breakdown_end_time
+      :breakdown_start_time, :breakdown_end_time,
+      #dependencies: []
     )
   end
 end

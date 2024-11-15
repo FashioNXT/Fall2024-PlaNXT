@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -12,70 +10,77 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 20_231_129_104_030) do
-  create_table 'items', force: :cascade do |t|
-    t.string 'name'
-    t.string 'model'
-    t.float 'width'
-    t.float 'length'
-    t.float 'depth'
-    t.float 'rotation'
-    t.string 'description'
-    t.float 'xpos'
-    t.float 'ypos'
-    t.float 'zpos'
-    t.integer 'step_id'
-    t.datetime 'created_at', null: false
-    t.datetime 'updated_at', null: false
-    t.datetime 'setup_start_time'
-    t.datetime 'setup_end_time'
-    t.datetime 'breakdown_start_time'
-    t.datetime 'breakdown_end_time'
+ActiveRecord::Schema[7.0].define(version: 2024_11_15_071553) do
+  create_table "item_dependencies", force: :cascade do |t|
+    t.integer "item_id"
+    t.integer "dependency_id"
+    t.index ["dependency_id"], name: "index_item_dependencies_on_dependency_id"
+    t.index ["item_id"], name: "index_item_dependencies_on_item_id"
   end
 
-  create_table 'plans', force: :cascade do |t|
-    t.string 'name'
-    t.string 'owner'
-    t.float 'venue_length'
-    t.float 'venue_width'
-    t.datetime 'created_at', null: false
-    t.datetime 'updated_at', null: false
-    t.integer 'user_id'
-    t.string 'timezone'
-    t.index ['user_id'], name: 'index_plans_on_user_id'
+  create_table "items", force: :cascade do |t|
+    t.string "name"
+    t.string "model"
+    t.float "width"
+    t.float "length"
+    t.float "depth"
+    t.float "rotation"
+    t.string "description"
+    t.float "xpos"
+    t.float "ypos"
+    t.float "zpos"
+    t.integer "step_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "setup_start_time"
+    t.datetime "setup_end_time"
+    t.datetime "breakdown_start_time"
+    t.datetime "breakdown_end_time"
   end
 
-  create_table 'steps', force: :cascade do |t|
-    t.date 'start_date'
-    t.integer 'plan_id'
-    t.datetime 'created_at', null: false
-    t.datetime 'updated_at', null: false
-    t.datetime 'start_time'
-    t.datetime 'end_time'
-    t.datetime 'break1_start_time'
-    t.datetime 'break1_end_time'
-    t.datetime 'break2_start_time'
-    t.datetime 'break2_end_time'
+  create_table "plans", force: :cascade do |t|
+    t.string "name"
+    t.string "owner"
+    t.float "venue_length"
+    t.float "venue_width"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id"
+    t.string "timezone"
+    t.index ["user_id"], name: "index_plans_on_user_id"
   end
 
-  create_table 'users', force: :cascade do |t|
-    t.integer 'level'
-    t.string 'name', null: false
-    t.string 'email', null: false
-    t.string 'password_digest'
-    t.string 'viewPermission'
-    t.string 'editPermission'
-    t.text 'description'
-    t.string 'extra1'
-    t.string 'extra2'
-    t.string 'extra3'
-    t.boolean 'enabled', default: true
-    t.datetime 'created_at', null: false
-    t.datetime 'updated_at', null: false
-    t.index ['email'], name: 'index_users_on_email'
+  create_table "steps", force: :cascade do |t|
+    t.date "start_date"
+    t.integer "plan_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "start_time"
+    t.datetime "end_time"
+    t.datetime "break1_start_time"
+    t.datetime "break1_end_time"
+    t.datetime "break2_start_time"
+    t.datetime "break2_end_time"
   end
 
-  add_foreign_key 'items', 'steps'
-  add_foreign_key 'plans', 'users'
-  add_foreign_key 'steps', 'plans'
+  create_table "users", force: :cascade do |t|
+    t.integer "level"
+    t.string "name", null: false
+    t.string "email", null: false
+    t.string "password_digest"
+    t.string "viewPermission"
+    t.string "editPermission"
+    t.text "description"
+    t.string "extra1"
+    t.string "extra2"
+    t.string "extra3"
+    t.boolean "enabled", default: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_users_on_email"
+  end
+
+  add_foreign_key "items", "steps"
+  add_foreign_key "plans", "users"
+  add_foreign_key "steps", "plans"
 end

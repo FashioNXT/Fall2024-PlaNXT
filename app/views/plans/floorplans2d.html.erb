@@ -508,7 +508,7 @@
         <td>${setupEndTime}</td>
         <td>${breakdownStartTime}</td>
         <td>${breakdownEndTime}</td>
-        <td><button class="view-dependencies-btn" data-item-id="${item.id}">View Dependencies</button></td>
+        <td><button class="view-dependencies-btn" data-item-id="${item.id}">View Dependency</button></td>
       `;
 
       // Add event listener for the "View dependencies" button
@@ -544,7 +544,11 @@
         <div class="popup-content">
           <h3>Dependencies for ${item.name}</h3>
           <ul>
-            ${dependencies.map(dep => `<li>${dep.name}</li>`).join('')}
+            ${dependencies.map(dep => `
+              <li>
+                (ID ${dep.id}): ${dep.name}
+              </li>
+            `).join('')}
           </ul>
           <button class="close-popup">Close</button>
         </div>
@@ -803,6 +807,12 @@
 
   .popup-content li {
     padding: 5px 0;
+    font-size: 14px;
+  }
+
+  .popup-content li span {
+    color: #007bff; /* Add color for item id */
+    font-weight: bold;
   }
 
   .close-popup {

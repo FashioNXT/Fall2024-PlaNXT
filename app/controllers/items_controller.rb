@@ -45,8 +45,8 @@ class ItemsController < ApplicationController
   # Fetch dependencies for a specific item
   def dependencies
     @item = Item.find(params[:id])
-    @dependencies = @item.dependencies
-    #@dependencies = @item.dependencies.select(:id, :name)
+    #@dependencies = @item.dependencies
+    @dependencies = @item.dependencies.select(:id, :name)
 
     # Return dependencies as JSON
     render json: @dependencies

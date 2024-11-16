@@ -17,38 +17,8 @@
             <span class="glyphicon glyphicon-chevron-right pull-right"></span>
         </a></li>
         </ul>
-        <button id="openTableModalBtn" class="btn btn-primary">Show All Items</button>
+              <%# <button id="openSummaryBtn" class="btn btn-primary">Show Summary</button> %>
         <hr />
-
-        <div id="itemsModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Items List</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <table class="table" id="itemsTable" style="margin-top: 3em">   
-                    <thead class="thead-light">
-                        <tr>
-                        <th style="vertical-align: middle;">Name</th>
-                        <th style="vertical-align: middle;">Item Type</th>
-                        <th style="vertical-align: middle;">Setup Start</th>
-                        <th style="vertical-align: middle;">Setup End</th>
-                        <th style="vertical-align: middle;">Breakdown Start</th>
-                        <th style="vertical-align: middle;">Breakdown End</th>
-                        </tr>
-                    </thead>
-                    <tbody id="items-table-body">
-                        <!-- Table rows will be added dynamically -->
-                    </tbody>
-                    </table>
-                </div>
-                </div>
-            </div>
-        </div>
 
         <!-- Context Menu -->
         <div id="context-menu">

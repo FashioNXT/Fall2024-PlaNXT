@@ -76,13 +76,9 @@
         }
       }
     ],
-    "wallTextures": [
-
-    ],
-    "floorTextures": {
-    },
-    "newFloorTextures": {
-    }
+    "wallTextures": [],
+    "floorTextures": {},
+    "newFloorTextures": {}
   },
   "items": [
     {

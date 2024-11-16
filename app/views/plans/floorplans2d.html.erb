@@ -142,7 +142,7 @@
   <div class="container">
     <div> 
 
-      <table id="itemsTableee" class="display table" style="margin-top: 3em">
+      <%# <table id="itemsTableee" class="display table" style="margin-top: 3em">
         <thead class="thead-light">
             <tr>
                 <th>Name</th>
@@ -156,22 +156,23 @@
         <tbody id="items-tables-body">
             <!-- Table rows will be added dynamically -->
         </tbody>
-    </table>
+    </table> %>
 
-      <%# <table class="table" id="itemsTable" style="margin-top: 3em">   
+    Search: <input type="text" id="searchInput" placeholder="Search..." oninput="searchTable(this.value)">
+      <table class="table" id="itemsTable" style="margin-top: 3em">   
         <thead class="thead-light">
-          <th style="vertical-align: middle;">Name</th>
-          <th style="vertical-align: middle;">Item Type</th>
-          <th style="vertical-align: middle;">Setup Start</th>
-          <th style="vertical-align: middle;">Setup End</th>
-          <th style="vertical-align: middle;">Breakdown Start</th>
-          <th style="vertical-align: middle;">Breakdown End</th>
+          <th style="vertical-align: middle;">Name <button class="sort-btn" data-column="0" data-order="asc" data-name="name">&#8597;</button></th>
+          <th style="vertical-align: middle;">Item Type <button class="sort-btn" data-column="1" data-order="asc" data-name="type">&#8597;</button></th>
+          <th style="vertical-align: middle;">Setup Start <button class="sort-btn" data-column="2" data-order="asc" data-name="time">&#8597;</button></th>
+          <th style="vertical-align: middle;">Setup End <button class="sort-btn" data-column="3" data-order="asc" data-name="time">&#8597;</button></th>
+          <th style="vertical-align: middle;">Breakdown Start <button class="sort-btn" data-column="4" data-order="asc" data-name="time">&#8597;</button></th>
+          <th style="vertical-align: middle;">Breakdown End <button class="sort-btn" data-column="5" data-order="asc" data-name="time">&#8597;</button></th>
         </thead>
         <tbody id="items-table-body">
           <!-- Table rows will be added dynamically -->
 
         </tbody>
-      </table> %>
+      </table>
     <div>
 
     <div class="button-container d-flex" style="margin-top: 3em">
@@ -306,38 +307,39 @@
       }
     }
 
-    function renderTable() {
-        fetch(`/items`)
-        .then(response => response.json())
-        .then(items => {
-            const tableBody = document.getElementById('items-tables-body');
-            tableBody.innerHTML = ''; 
-            
-            items.forEach((item, index) => {
-                const setupStartTime = parseDateTime(item.setup_start_time, true);
-                const setupEndTime = parseDateTime(item.setup_end_time, true);
-                const breakdownStartTime = parseDateTime(item.breakdown_start_time, true);
-                const breakdownEndTime = parseDateTime(item.breakdown_end_time, true);
+    // async function renderTable() {
 
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                <td>item-${index+1}</td>
-                <td>${item.name}</td>
-                <td>${setupStartTime}</td>
-                <td>${setupEndTime}</td>
-                <td>${breakdownStartTime}</td>
-                <td>${breakdownEndTime}</td>
-            `;
-            tableBody.appendChild(row);
-        });
-        // Initialize DataTable
-        $('#itemsTableee').DataTable();
-        })
-        .catch(error => {
-            console.error('Error fetching items:', error);
-        });
-    }
-    renderTable();
+    //   // Extract times from data attributes of the selected dropdown item
+    //   const stepId = selectedItem.getAttribute('data-id');
+
+
+    //   var itemsStep = await searchItemsByStep(stepId);
+    //   console.log(itemsStep);
+
+    //   const tableBody = document.getElementById('items-tables-body');
+    //   tableBody.innerHTML = ''; 
+    //   itemsStep.forEach((item, index) => {
+    //       const itemSetupStartTime = parseDateTime(item.setup_start_time, true);
+    //       const itemSetupEndTime = parseDateTime(item.setup_end_time, true);
+    //       const breakdownStartTime = parseDateTime(item.breakdown_start_time, true);
+    //       const breakdownEndTime = parseDateTime(item.breakdown_end_time, true);
+    //       setupStartTime
+    //       setupEndTime
+
+    //       const row = document.createElement('tr');
+    //       row.innerHTML = `
+    //       <td>item-${index+1}</td>
+    //       <td>${item.name}</td>
+    //       <td>${itemSetupStartTime}</td>
+    //       <td>${itemSetupEndTime}</td>
+    //       <td>${breakdownStartTime}</td>
+    //       <td>${breakdownEndTime}</td>
+    //   `;
+    //   tableBody.appendChild(row);
+    //     // Initialize DataTable
+    //     $('#itemsTableee').DataTable();
+    // })
+    // }
 
 
     function showItems(step_id){
@@ -378,8 +380,9 @@
       items.length = 0;
 
       // clear all table rows
-      // const tableBody = document.getElementById('items-table-body');
-      // tableBody.innerHTML = '';
+      const tableBody = document.getElementById('items-table-body');
+      tableBody.innerHTML = '';
+
 
       var _items = await searchItemsByStep(stepId);
 
@@ -393,7 +396,7 @@
         }
         items.push(item);
         // Add table row when new item is dragged and placed with newly generated ID
-        // addTableRow(item.id);
+        addTableRow(item.id);
       }
 
       showItems(stepId);
@@ -429,42 +432,39 @@
       }
     }
 
-    document.getElementById('openSummaryBtn').addEventListener('click', function() {
+  document.getElementById('openSummaryBtn').addEventListener('click', async function() {
     // Show the modal
     $('#itemsModal').modal('show');
+    const stepId = selectedItem.getAttribute('data-id');
 
-  fetch('/items')  // Fetch all items from the /items endpoint
-  .then(response => response.json())
-  .then(items => {
-      const tableBody = document.getElementById('items-summary-body');
-      tableBody.innerHTML = '';  // Clear existing rows
+    var itemsStep = await searchItemsByStep(stepId);
+    console.log(itemsStep);
 
-      // Create an object to store counts of item names
-      const itemCounts = {};
+    const tableBody = document.getElementById('items-summary-body');
+    tableBody.innerHTML = '';  // Clear existing rows
 
-      // Iterate over the items and count occurrences of each name
-      items.forEach(item => {
-          const name = item.name;
-          if (itemCounts[name]) {
-              itemCounts[name] += 1;  // Increment the count for this name
-          } else {
-              itemCounts[name] = 1;  // Initialize count for this name
-          }
-      })
-      Object.keys(itemCounts).forEach((name, index) => {
-            const count = itemCounts[name];
+    // Create an object to store counts of item names
+    const itemCounts = {};
 
-            const newRow = tableBody.insertRow();
-            newRow.innerHTML = `
-                <td>${name}</td>
-                <td>${count}</td>
-            `;
-        });
+    // Iterate over the items and count occurrences of each name
+    itemsStep.forEach(item => {
+        const name = item.name;
+        if (itemCounts[name]) {
+            itemCounts[name] += 1;  // Increment the count for this name
+        } else {
+            itemCounts[name] = 1;  // Initialize count for this name
+        }
     })
-    .catch(error => {
-      console.error('Error fetching items:', error);
+    Object.keys(itemCounts).forEach((name, index) => {
+      const count = itemCounts[name];
+
+      const newRow = tableBody.insertRow();
+      newRow.innerHTML = `
+          <td>${name}</td>
+          <td>${count}</td>
+        `;
     });
-});
+  });
 
     function handleDragStart(e) {
       e.dataTransfer.setData('text/plain', this.id);
@@ -597,25 +597,25 @@
     const tableBody = document.getElementById('items-table-body');
     
     // Function to add a new row to the table
-    // function addTableRow(itemId) {
+    function addTableRow(itemId) {
 
-    //   var item = items.find(item => item.id == itemId);
-    //   var setupStartTime = parseDateTime(item.setup_start_time, true);
-    //   var setupEndTime = parseDateTime(item.setup_end_time, true);
-    //   var breakdownStartTime = parseDateTime(item.breakdown_start_time, true);
-    //   var breakdownEndTime = parseDateTime(item.breakdown_end_time, true);
+      var item = items.find(item => item.id == itemId);
+      var setupStartTime = parseDateTime(item.setup_start_time, true);
+      var setupEndTime = parseDateTime(item.setup_end_time, true);
+      var breakdownStartTime = parseDateTime(item.breakdown_start_time, true);
+      var breakdownEndTime = parseDateTime(item.breakdown_end_time, true);
 
-    //   const newRow = tableBody.insertRow();
+      const newRow = tableBody.insertRow();
 
-    //   newRow.innerHTML = `
-    //     <td>item-${items.length}</td>
-    //     <td>${item.name}</td>
-    //     <td>${setupStartTime}</td>
-    //     <td>${setupEndTime}</td>
-    //     <td>${breakdownStartTime}</td>
-    //     <td>${breakdownEndTime}</td>
-    //   `;
-    // }
+      newRow.innerHTML = `
+        <td>item-${items.length}</td>
+        <td>${item.name}</td>
+        <td>${setupStartTime}</td>
+        <td>${setupEndTime}</td>
+        <td>${breakdownStartTime}</td>
+        <td>${breakdownEndTime}</td>
+      `;
+    }
     
     // Function to remove a row from the table
     function removeTableRow(itemId) {
@@ -744,6 +744,69 @@
       updateTime(slider.value - slider.min, stepElement.getAttribute('data-start-time'));
     };
 
+    document.addEventListener('DOMContentLoaded', function() {
+    // Sorting Example
+   
+   document.querySelectorAll('.sort-btn').forEach(button => {
+    button.addEventListener('click', function () {
+        const columnIndex = this.getAttribute('data-column'); // Column index
+        const sortOrder = this.getAttribute('data-order'); // Current sort order
+        const tableBody = document.getElementById('items-table-body');
+        const rows = Array.from(tableBody.querySelectorAll('tr')); // All rows
+
+        // Sort rows based on the selected column
+        rows.sort((rowA, rowB) => {
+    const cellA = rowA.cells[columnIndex].textContent.trim();
+    const cellB = rowB.cells[columnIndex].textContent.trim();
+
+    // Extract numeric values (for columns like "item-49")
+    const numericA = cellA.match(/\d+/) ? parseInt(cellA.match(/\d+/)[0], 10) : cellA;
+    const numericB = cellB.match(/\d+/) ? parseInt(cellB.match(/\d+/)[0], 10) : cellB;
+
+    // Check if the column contains time-like values (e.g., "2024-11-15 09:30")
+    const dateA = Date.parse(cellA);
+    const dateB = Date.parse(cellB);
+
+    if (this.getAttribute('data-name')=="name") {
+        // Numeric sorting (for "item-49", etc.)
+        return sortOrder === 'asc' ? numericA - numericB : numericB - numericA;
+    } else if (this.getAttribute('data-name') == "time") {
+        // Date (time) sorting for columns like "Setup Start", "Setup End"
+        return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
+    } else {
+        // Default to string-based sorting
+        return sortOrder === 'asc' 
+            ? cellA.localeCompare(cellB)
+            : cellB.localeCompare(cellA);
+    }
+});
+
+
+
+        // Update the sorting order for the button
+        this.setAttribute('data-order', sortOrder === 'asc' ? 'desc' : 'asc');
+
+        // Reinsert sorted rows into the table body
+        rows.forEach(row => tableBody.appendChild(row));
+    });
+});
+
+
+    // Searching Example
+    document.getElementById('searchInput').addEventListener('input', function() {
+        searchTable(this.value);
+    });
+});
+
+function searchTable(query) {
+    const rows = document.querySelectorAll('#itemsTable tbody tr');
+    rows.forEach(row => {
+        const rowText = row.textContent.toLowerCase();
+        row.style.display = rowText.includes(query.toLowerCase()) ? '' : 'none';
+    });
+}
+
+
     function addMinutesToDate(date, minutes) {
         return new Date(date.getTime() + minutes * 60000);
     }
@@ -826,6 +889,17 @@
     width: 200px;
     border: 1px solid #000;
   }
+
+  .sort-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.8em;
+    margin-left: 0.5em;
+}
+.sort-btn:hover {
+    color: #007bff; /* Highlight on hover */
+}
 
   .disabled-label {
     color: #6c757d; /* This is Bootstrap's default for disabled text */

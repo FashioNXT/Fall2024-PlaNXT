@@ -3,9 +3,12 @@
     <div class="accordion accordion-container accordion-flush col-3">
       <div class="accordion-item">
         <h2 class="accordion-header">
+          <div style="display: flex; align-items:center; padding-left: 20px">
+          <input type="checkbox" id="topLayerCheckbox" checked /> <!-- Checkbox for Top Layer -->
           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTopLayer" aria-expanded="false" aria-controls="flush-collapseTopLayer">
             Top Layer
           </button>
+          </div>
         </h2>
         <div id="flush-collapseTopLayer" class="accordion-collapse collapse items">
           <!-- Dynamically rendered -->
@@ -13,9 +16,12 @@
       </div>
       <div class="accordion-item">
         <h2 class="accordion-header">
+          <div style="display: flex; align-items:center; padding-left: 20px">
+	        <input type="checkbox" id="furnitureLayerCheckbox" checked /> <!-- Checkbox for Furniture Layer -->
           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFurnitureLayer" aria-expanded="false" aria-controls="flush-collapseFurnitureLayer">
             Furniture Layer
           </button>
+          </div>
         </h2>
         <div id="flush-collapseFurnitureLayer" class="accordion-collapse collapse items">
           <!-- Dynamically rendered -->
@@ -23,9 +29,12 @@
       </div>
       <div class="accordion-item">
         <h2 class="accordion-header">
+          <div style="display: flex; align-items:center; padding-left: 20px">
+	        <input type="checkbox" id="electricLayerCheckbox" checked /> <!-- Checkbox for Electric Layer -->
           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseElectricLayer" aria-expanded="false" aria-controls="flush-collapseElectricLayer">
             Electric Layer
           </button>
+          </div>
         </h2>
         <div id="flush-collapseElectricLayer" class="accordion-collapse collapse items">
           <!-- Dynamically rendered -->
@@ -33,9 +42,12 @@
       </div>
       <div class="accordion-item">
         <h2 class="accordion-header">
+          <div style="display: flex; align-items:center; padding-left: 20px">
+	        <input type="checkbox" id="staffLayerCheckbox" checked /> <!-- Checkbox for Staff Layer -->
           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseStaffLayer" aria-expanded="false" aria-controls="flush-collapseStaffLayer">
             Staff Layer
           </button>
+          </div>
         </h2>
         <div id="flush-collapseStaffLayer" class="accordion-collapse collapse items">
           <!-- Dynamically rendered -->
@@ -341,39 +353,59 @@
     // })
     // }
 
-
-    function showItems(step_id){
-
-      // clear all dropped items
-      const droppedItems = document.querySelectorAll('[data-cloned="true"]');
-      droppedItems.forEach(item => {
-        item.remove();
-      });
-
-      for( item of items){
-        var droppedElementId = "item-"
-        for(let itemType in itemTemplates){
-          if (itemTemplates[itemType].displayName == item.name){
-            droppedElementId += itemType;
-            break;
-          }
-        }
-
-        if (item['setup_start_time'] != null && item['setup_end_time'] != null && item['breakdown_start_time'] != null && item['breakdown_end_time'] != null){
-          setupStartT = new Date(parseDateTime(item['setup_start_time'], true));
-          setupEndT = new Date(parseDateTime(item['setup_end_time'], true));
-          breakdownStartT = new Date(parseDateTime(item['breakdown_start_time'], true));
-          breakdownEndT = new Date(parseDateTime(item['breakdown_end_time'], true));
-
-          current_time = new Date(current_time);
-
-          if (setupStartT <= current_time && current_time <= breakdownEndT){
-            createItem(droppedElementId, item);
-          }
-        }
+    function getCategory(itemName) {
+      if (itemTemplates[itemName] && itemTemplates[itemName].category) {
+        return itemTemplates[itemName].category;
+      } else {
+        console.warn(`Category not found for item: ${itemName}`);
+        return null; // Return null or an appropriate default value if not found
       }
     }
 
+    window.showItems = function(step_id) {
+      // Clear all dropped items
+      const droppedItems = document.querySelectorAll('[data-cloned="true"]');
+      droppedItems.forEach(item => {
+          item.remove();
+      });
+  
+      // Map checkboxes to layer visibility
+      const layerCheckboxes = {
+          TopLayer: document.getElementById('topLayerCheckbox'),
+          FurnitureLayer: document.getElementById('furnitureLayerCheckbox'),
+          ElectricLayer: document.getElementById('electricLayerCheckbox'),
+          StaffLayer: document.getElementById('staffLayerCheckbox'),
+      };
+  
+      for (const item of items) {
+          const category = getCategory(item.name.replace(/\s+/g, ''));
+
+          var droppedElementId = "item-";
+          for (let itemType in itemTemplates) {
+              if (itemTemplates[itemType].displayName == item.name) {
+                  droppedElementId += itemType;
+                  break;
+              }
+          }
+  
+          if (item['setup_start_time'] != null && item['setup_end_time'] != null && item['breakdown_start_time'] != null && item['breakdown_end_time'] != null){
+              const setupStartT = new Date(parseDateTime(item['setup_start_time'], true));
+              const setupEndT = new Date(parseDateTime(item['setup_end_time'], true));
+              const breakdownStartT = new Date(parseDateTime(item['breakdown_start_time'], true));
+              const breakdownEndT = new Date(parseDateTime(item['breakdown_end_time'], true));
+  
+              current_time = new Date(current_time);
+  
+              if (setupStartT <= current_time && current_time <= breakdownEndT) {
+                  // Check if the layer checkbox for this item is checked
+                  const layer = getCategory(item.name.replace(/\s+/g, ''));
+                  if (layerCheckboxes[layer] && layerCheckboxes[layer].checked) {
+                      createItem(droppedElementId, item);
+                  }
+              }
+          }
+      }
+  }
 
     async function loadItems(stepId) {
       // clear all items
@@ -849,6 +881,35 @@ function searchTable(query) {
       });
     });
     })();
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Layer checkboxes
+    const layerCheckboxes = {
+        TopLayer: document.getElementById('topLayerCheckbox'),
+        FurnitureLayer: document.getElementById('furnitureLayerCheckbox'),
+        ElectricLayer: document.getElementById('electricLayerCheckbox'),
+        StaffLayer: document.getElementById('staffLayerCheckbox'),
+    };
+
+    // Toggle visibility of a layer
+    function toggleLayerVisibility(checkbox, layer) {
+        if (layerCheckboxes[layer]) {
+            const stepId = selectedItem.getAttribute('data-id');
+            showItems(stepId);
+        }
+    }
+
+    // Attach event listeners to checkboxes
+    for (const [layer, checkbox] of Object.entries(layerCheckboxes)) {
+        checkbox.addEventListener('change', () => toggleLayerVisibility(checkbox, layer));
+    }
+
+    // Initialize all items and default visibility
+    //initializeItems();
+    Object.entries(layerCheckboxes).forEach(([layer, checkbox]) =>
+        toggleLayerVisibility(checkbox, layer)
+    );
+});
 
 </script>
 

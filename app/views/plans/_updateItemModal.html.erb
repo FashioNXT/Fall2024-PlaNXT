@@ -6,66 +6,95 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="row g-3 align-items-center">
-                    <div class="col-auto">
+                <!-- Width -->
+                <div class="row align-items-center mb-3">
+                    <div class="col-3">
                         <label for="updateItemWidth" class="col-form-label">Width (inch)</label>
                     </div>
-                    <div class="col-auto">
+                    <div class="col-9">
                         <input type="number" id="updateItemWidth" class="form-control">
                     </div>
                 </div>
 
-                <div class="row g-3 align-items-center" style="margin-top:1em">
-                    <div class="col-auto">
+                <!-- Depth -->
+                <div class="row align-items-center mb-3">
+                    <div class="col-3">
                         <label for="updateItemDepth" class="col-form-label">Depth (inch)</label>
                     </div>
-                    <div class="col-auto">
+                    <div class="col-9">
                         <input type="number" id="updateItemDepth" class="form-control">
                     </div>
                 </div>
-                <div class="row g-3 align-items-center" style="margin-top:1em">
-                    <div class="col-auto">
+
+                <!-- Rotation -->
+                <div class="row align-items-center mb-3">
+                    <div class="col-3">
                         <label for="updateItemRotation" class="col-form-label">Rotation</label>
                     </div>
-                    <div class="col-auto">
+                    <div class="col-9">
                         <input type="number" id="updateItemRotation" class="form-control">
                     </div>
                 </div>
-                <div class="row g-3 align-items-center" style="margin-top:1em">
-                    <div class="col-auto">
+
+                <!-- Description -->
+                <div class="row align-items-center mb-3">
+                    <div class="col-3">
                         <label for="updateItemDescription" class="col-form-label">Description</label>
                     </div>
-                    <div class="col-auto">
+                    <div class="col-9">
                         <input id="updateItemDescription" class="form-control">
                     </div>
                 </div>
-                <div class="row g-3 align-items-center" style="margin-top:1em">
-                    <div class="col-auto">
-                        <label for="updateItemStartTime" class="col-form-label">Setup Start</label>
+
+                <!-- Setup Times -->
+                <div class="row align-items-center mb-3">
+                    <div class="col-3">
+                        <label for="updateItemSetupStartTime" class="col-form-label">Setup Start</label>
                     </div>
-                    <div class="col-auto">
-                        <input type="datetime-local" id="updateItemStartTime" class="form-control datetimepicker-input" />
-                    </div>
-                    <div class="col-auto">
-                        <label for="updateItemEndTime" class="col-form-label">Setup End</label>
-                    </div>
-                    <div class="col-auto">
-                        <input type="datetime-local" id="updateItemEndTime" class="form-control datetimepicker-input" />
+                    <div class="col-9">
+                        <input type="datetime-local" id="updateItemSetupStartTime" class="form-control datetimepicker-input">
                     </div>
                 </div>
 
-                <div class="row g-3 align-items-center" style="margin-top:1em">
-                    <div class="col-auto">
+                <!-- Setup End -->
+                <div class="row align-items-center mb-3">
+                    <div class="col-3">
+                        <label for="updateItemSetupDuration" class="col-form-label">Setup Duration (mins)</label>
+                    </div>
+                    <div class="col-3">
+                        <input type="number" id="updateItemSetupDuration" class="form-control">
+                    </div>
+                    <div class="col-2">
+                        <label for="updateItemSetupEndTime" class="col-form-label">Setup End</label>
+                    </div>
+                    <div class="col-4">
+                        <input type="datetime-local" id="updateItemSetupEndTime" class="form-control datetimepicker-input" disabled>
+                    </div>
+                </div>
+
+                <!-- Breakdown Times -->
+                <div class="row align-items-center mb-3">
+                    <div class="col-3">
                         <label for="updateItemBreakdownStartTime" class="col-form-label">Breakdown Start</label>
                     </div>
-                    <div class="col-auto">
-                        <input type="datetime-local" id="updateItemBreakdownStartTime" class="form-control datetimepicker-input" />
+                    <div class="col-9">
+                        <input type="datetime-local" id="updateItemBreakdownStartTime" class="form-control datetimepicker-input">
                     </div>
-                    <div class="col-auto">
+                </div>
+
+                <!-- Breakdown End -->
+                <div class="row align-items-center mb-3">
+                    <div class="col-3">
+                        <label for="updateItemBreakdownDuration" class="col-form-label">Breakdown Duration (mins)</label>
+                    </div>
+                    <div class="col-3">
+                        <input type="number" id="updateItemBreakdownDuration" class="form-control">
+                    </div>
+                    <div class="col-2">
                         <label for="updateItemBreakdownEndTime" class="col-form-label">Breakdown End</label>
                     </div>
-                    <div class="col-auto">
-                        <input type="datetime-local" id="updateItemBreakdownEndTime" class="form-control datetimepicker-input" />
+                    <div class="col-4">
+                        <input type="datetime-local" id="updateItemBreakdownEndTime" class="form-control datetimepicker-input" disabled>
                     </div>
                 </div>
             </div>
@@ -80,6 +109,77 @@
 </div>
 
 <script>
+
+    // Restrict input to positive integers for duration fields
+    document.getElementById('updateItemSetupDuration').addEventListener('input', restrictToPositiveIntegers);
+    document.getElementById('updateItemBreakdownDuration').addEventListener('input', restrictToPositiveIntegers);
+
+    function restrictToPositiveIntegers(event) {
+        const inputField = event.target;
+        const value = inputField.value;
+    
+        // Use a regular expression to allow only positive integers
+        const sanitizedValue = value.replace(/[^0-9]/g, '');
+    
+        // If the sanitized value is different, update the field
+        if (value !== sanitizedValue) {
+            inputField.value = sanitizedValue;
+        }
+    }
+
+    document.getElementById('updateItemSetupStartTime').addEventListener('change', updateSetupEndTime);
+    document.getElementById('updateItemSetupDuration').addEventListener('input', updateSetupEndTime);
+    document.getElementById('updateItemBreakdownStartTime').addEventListener('change', updateBreakdownEndTime);
+    document.getElementById('updateItemBreakdownDuration').addEventListener('input', updateBreakdownEndTime);
+
+    function updateSetupEndTime() {
+        const setupStart = document.getElementById('updateItemSetupStartTime').value;
+        const duration = parseInt(document.getElementById('updateItemSetupDuration').value, 10);
+
+        if (setupStart && !isNaN(duration)) {
+            document.getElementById('updateItemSetupEndTime').value = calculateEndTime(setupStart, duration);
+        }
+    }
+
+    function updateBreakdownEndTime() {
+        const breakdownStart = document.getElementById('updateItemBreakdownStartTime').value;
+        const duration = parseInt(document.getElementById('updateItemBreakdownDuration').value, 10);
+
+        if (breakdownStart && !isNaN(duration)) {
+            document.getElementById('updateItemBreakdownEndTime').value = calculateEndTime(breakdownStart, duration);
+        }
+    }
+
+    function calculateEndTime(startDate, durationMinutes) {
+        const startDateTime = new Date(startDate);
+        const endDateTime = new Date(startDateTime.getTime() + durationMinutes * 60000);
+
+        const year = endDateTime.getFullYear();
+        const month = String(endDateTime.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+        const day = String(endDateTime.getDate()).padStart(2, '0');
+        const hours = String(endDateTime.getHours()).padStart(2, '0');
+        const minutes = String(endDateTime.getMinutes()).padStart(2, '0');
+
+        return `${year}-${month}-${day}T${hours}:${minutes}`;
+    }
+
+    function calculateDuration(startTime, endTime) {
+        const start = new Date(startTime);
+        const end = new Date(endTime);
+    
+        if (isNaN(start) || isNaN(end)) {
+            console.error("Invalid start or end time provided.");
+            return 0;
+        }
+    
+        // Calculate the difference in milliseconds and convert to minutes
+        duration = Math.round((end - start) / 60000); // Duration in minutes
+        if(duration < 0) {
+            duration = '';
+        }
+        return duration;
+    }    
+
     function openUpdateModal(item, selectedStepId, loadItems) {
 
         // Show the delete confirmation modal
@@ -91,9 +191,11 @@
         document.getElementById('updateItemDepth').value = item.depth;
         document.getElementById('updateItemRotation').value = item.rotation;
         document.getElementById('updateItemDescription').value = item.description;
-        document.getElementById('updateItemStartTime').value = parseDateTime(item.setup_start_time);
-        document.getElementById('updateItemEndTime').value = parseDateTime(item.setup_end_time);
+        document.getElementById('updateItemSetupStartTime').value = parseDateTime(item.setup_start_time);
+        document.getElementById('updateItemSetupDuration').value = calculateDuration(item.setup_start_time, item.setup_end_time);
+        document.getElementById('updateItemSetupEndTime').value = parseDateTime(item.setup_end_time);
         document.getElementById('updateItemBreakdownStartTime').value = parseDateTime(item.breakdown_start_time);
+        document.getElementById('updateItemBreakdownDuration').value = calculateDuration(item.breakdown_start_time, item.breakdown_end_time);
         document.getElementById('updateItemBreakdownEndTime').value = parseDateTime(item.breakdown_end_time);
 
 
@@ -104,8 +206,8 @@
             var depth = document.getElementById('updateItemDepth').value;
             var rotation = document.getElementById('updateItemRotation').value;
             var description = document.getElementById('updateItemDescription').value;
-            var setupStartTime = document.getElementById('updateItemStartTime').value + ":00";
-            var setupEndTime = document.getElementById('updateItemEndTime').value + ":00";
+            var setupStartTime = document.getElementById('updateItemSetupStartTime').value + ":00";
+            var setupEndTime = document.getElementById('updateItemSetupEndTime').value + ":00";
             var breakdownStartTime = document.getElementById('updateItemBreakdownStartTime').value + ":00";
             var breakdownEndTime = document.getElementById('updateItemBreakdownEndTime').value + ":00";
             var inch2feet = 1/12;

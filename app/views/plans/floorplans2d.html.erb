@@ -3,9 +3,12 @@
     <div class="accordion accordion-container accordion-flush col-3">
       <div class="accordion-item">
         <h2 class="accordion-header">
+          <div style="display: flex; align-items:center; padding-left: 20px">
+          <input type="checkbox" id="topLayerCheckbox" checked onchange="toggleLayerVisibility(this, 'TopLayer')" />
           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTopLayer" aria-expanded="false" aria-controls="flush-collapseTopLayer">
             Top Layer
           </button>
+          </div>
         </h2>
         <div id="flush-collapseTopLayer" class="accordion-collapse collapse items">
           <!-- Dynamically rendered -->
@@ -13,9 +16,12 @@
       </div>
       <div class="accordion-item">
         <h2 class="accordion-header">
+          <div style="display: flex; align-items:center; padding-left: 20px">
+          <input type="checkbox" id="furnitureLayerCheckbox" checked onchange="toggleLayerVisibility(this, 'FurnitureLayer')" />
           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFurnitureLayer" aria-expanded="false" aria-controls="flush-collapseFurnitureLayer">
             Furniture Layer
           </button>
+          </div>
         </h2>
         <div id="flush-collapseFurnitureLayer" class="accordion-collapse collapse items">
           <!-- Dynamically rendered -->
@@ -23,9 +29,12 @@
       </div>
       <div class="accordion-item">
         <h2 class="accordion-header">
+          <div style="display: flex; align-items:center; padding-left: 20px">
+          <input type="checkbox" id="electricLayerCheckbox" checked onchange="toggleLayerVisibility(this, 'ElectricLayer')" />
           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseElectricLayer" aria-expanded="false" aria-controls="flush-collapseElectricLayer">
             Electric Layer
           </button>
+          </div>
         </h2>
         <div id="flush-collapseElectricLayer" class="accordion-collapse collapse items">
           <!-- Dynamically rendered -->
@@ -33,9 +42,12 @@
       </div>
       <div class="accordion-item">
         <h2 class="accordion-header">
+          <div style="display: flex; align-items:center; padding-left: 20px">
+          <input type="checkbox" id="staffLayerCheckbox" checked onchange="toggleLayerVisibility(this, 'StaffLayer')" />
           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseStaffLayer" aria-expanded="false" aria-controls="flush-collapseStaffLayer">
             Staff Layer
           </button>
+          </div>
         </h2>
         <div id="flush-collapseStaffLayer" class="accordion-collapse collapse items">
           <!-- Dynamically rendered -->
@@ -341,6 +353,29 @@
     // })
     // }
 
+    function getCategory(itemName) {
+      if (itemTemplates[itemName] && itemTemplates[itemName].category) {
+        return itemTemplates[itemName].category;
+      } else {
+        console.warn(`Category not found for item: ${itemName}`);
+        return null;
+      }
+    }
+
+    // Layer checkboxes
+    layerCheckboxes = {
+        TopLayer: document.getElementById('topLayerCheckbox'),
+        FurnitureLayer: document.getElementById('furnitureLayerCheckbox'),
+        ElectricLayer: document.getElementById('electricLayerCheckbox'),
+        StaffLayer: document.getElementById('staffLayerCheckbox'),
+    };
+
+    window.toggleLayerVisibility = function (checkbox, layer) {
+      if (layerCheckboxes[layer]) {
+          const stepId = selectedItem.getAttribute('data-id');
+          showItems(stepId);
+      }
+    }
 
     function showItems(step_id){
 
@@ -368,7 +403,11 @@
           current_time = new Date(current_time);
 
           if (setupStartT <= current_time && current_time <= breakdownEndT){
-            createItem(droppedElementId, item);
+            // Check if the layer checkbox for this item is checked
+            const layer = getCategory(item.name.replace(/\s+/g, ''));
+            if (layerCheckboxes[layer] && layerCheckboxes[layer].checked) {
+              createItem(droppedElementId, item);
+            }
           }
         }
       }

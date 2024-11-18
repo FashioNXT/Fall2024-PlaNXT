@@ -3,6 +3,7 @@
 Rails.application.routes.draw do
   # Favicon route to prevent errors
   get '/favicon.ico', to: proc { [204, {}, []] }
+  #get '/items/by_step/:step_id', to: 'items#items_by_step', as: 'by_step_items'
   
   resources :items do
     collection do

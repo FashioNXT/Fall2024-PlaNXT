@@ -87,6 +87,12 @@ class ItemsController < ApplicationController
     @item = Item.find(params[:id])
   end
 
+  # def items_by_step
+  #   step_id = params[:step_id]
+  #   @items = Item.where(step_id: step_id)  # Adjust this to match your model structure
+  #   render json: @items
+  # end
+
   # Only allow a list of trusted parameters through.
   def item_params
     params.require(:item).permit(

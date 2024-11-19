@@ -10,7 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_29_104030) do
+ActiveRecord::Schema[7.0].define(version: 2024_11_19_045132) do
+  create_table "item_dependencies", force: :cascade do |t|
+    t.integer "item_id"
+    t.integer "dependency_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "items", force: :cascade do |t|
     t.string "name"
     t.string "model"

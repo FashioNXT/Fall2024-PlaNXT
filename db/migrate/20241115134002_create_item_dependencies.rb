@@ -6,5 +6,7 @@ class CreateItemDependencies < ActiveRecord::Migration[7.0]
 
       t.timestamps
     end
+    add_index :item_dependencies, :item_id
+    add_index :item_dependencies, :dependency_id
   end
 end

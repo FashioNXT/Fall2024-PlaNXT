@@ -45,6 +45,16 @@
                         <input id="updateItemDescription" class="form-control">
                     </div>
                 </div>
+                <div class="row align-items-center mb-3" style="margin-top:1em">
+                    <div class="col-3">
+                        <label for="updateItemDependencies" class="col-form-label">Dependencies</label>
+                    </div>
+                    <div class="col-9">
+                        <select id="updateItemDependencies" class="form-select" multiple>
+                            <!-- Options will be populated dynamically -->
+                        </select>
+                    </div>
+                </div>
 
                 <!-- Setup Times -->
                 <div class="row align-items-center mb-3">
@@ -197,6 +207,35 @@
         document.getElementById('updateItemBreakdownStartTime').value = parseDateTime(item.breakdown_start_time);
         document.getElementById('updateItemBreakdownDuration').value = calculateDuration(item.breakdown_start_time, item.breakdown_end_time);
         document.getElementById('updateItemBreakdownEndTime').value = parseDateTime(item.breakdown_end_time);
+        // Fetch dependencies for the item being updated
+        fetch(`/items/${item.id}/dependencies`)
+            .then(response => response.json())
+            .then(dependencies => {
+                const dependencyIds = new Set(dependencies.map(dep => dep.id));
+                fetch(`/items/search?step_id=${selectedStepId}`)
+                    .then(response => response.json())
+                    .then(items => {
+                        const dependencyDropdown = document.getElementById('updateItemDependencies');
+                        dependencyDropdown.innerHTML = ''; // Clear existing options
+                        // Populate the dropdown with items
+                        items.forEach(function(dependencyItem) {
+                            const option = document.createElement('option');
+                            option.value = dependencyItem.id;
+                            option.textContent = `${dependencyItem.id}: ${dependencyItem.name}`;
+                            // If the item is a dependency, mark it as selected
+                            if (dependencyIds.has(dependencyItem.id)) {
+                                option.selected = true;
+                            }
+                            dependencyDropdown.appendChild(option);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error fetching items for dependencies:', error);
+                    });
+            })
+            .catch(error => {
+                console.error('Error fetching item dependencies:', error);
+            });
 
 
         // Set the onclick function for the confirm button
@@ -210,6 +249,7 @@
             var setupEndTime = document.getElementById('updateItemSetupEndTime').value + ":00";
             var breakdownStartTime = document.getElementById('updateItemBreakdownStartTime').value + ":00";
             var breakdownEndTime = document.getElementById('updateItemBreakdownEndTime').value + ":00";
+            const selectedDependencies = Array.from(document.getElementById('updateItemDependencies').selectedOptions).map(option => option.value);
             var inch2feet = 1/12;
             // update the item
             updateItem({      
@@ -223,11 +263,12 @@
                 setupEndTime: setupEndTime,
                 breakdownStartTime: breakdownStartTime,
                 breakdownEndTime: breakdownEndTime,
+                dependencies: selectedDependencies,
             }, selectedStepId, loadItems);
         };
 
         document.getElementById('confirmDeleteBtn').onclick = function() {
-            deleteItem(item.id, selectedStepId, loadItems);
+            openDeleteConfirmationModal(item.id, item.name, selectedStepId, loadItems);
         };
     };
 
@@ -249,6 +290,7 @@
                 setup_end_time: item.setupEndTime,
                 breakdown_start_time: item.breakdownStartTime,
                 breakdown_end_time: item.breakdownEndTime,
+                dependencies: item.dependencies
             } 
           })
         })

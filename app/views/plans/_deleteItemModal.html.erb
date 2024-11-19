@@ -1,0 +1,61 @@
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteConfirmationModalLabel">Confirm Delete</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete <strong id="deleteItemName"></strong> (ID: <span id="deleteItemId"></span>)?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancel-btn">Cancel</button>
+        <button type="button" class="btn btn-danger" id="delete-btn">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    function openDeleteConfirmationModal(item_id, item_name, selectedStepId, loadItems) {
+        document.getElementById('deleteItemName').innerText = item_name;
+        document.getElementById('deleteItemId').innerText = item_id;
+
+        const deleteModal = new bootstrap.Modal(document.getElementById('deleteConfirmationModal'), {
+            backdrop: 'static',
+            keyboard: false
+        });
+
+        deleteModal.show();
+
+        //Set the onclick function for the confirm button
+        document.getElementById('delete-btn').onclick = function() {
+            deleteTheItem(item_id, selectedStepId, loadItems);
+            deleteModal.hide(); // Hide the modal after confirmation
+        };
+    }
+
+    function deleteTheItem(item_id, selectedStepId, loadItems){
+        console.log("delete item: " + item_id); // anprasa
+        // AJAX request to update the item with the step_id
+        fetch(`/items/${item_id}`, {
+          method: 'DELETE',
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-Token": document.querySelector("[name='csrf-token']").content
+          }
+        })
+        .then(response => {
+        console.log("Delete response:", response); // anprasa
+        if (response.ok) {
+            loadItems(selectedStepId); // Reload items if deletion is successful
+        } else {
+            console.error("Failed to delete item:", response);
+        }
+        })
+        .catch(error => {
+            console.error('Error deleting item:', error); // anprasa
+        });
+    }
+</script>

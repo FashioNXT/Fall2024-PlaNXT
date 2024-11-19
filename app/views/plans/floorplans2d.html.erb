@@ -156,6 +156,32 @@
     </ul>
   </div>
 </div>
+  <div class="dropdown">
+    <input class="form-control" id="combobox" type="text" data-bs-toggle="dropdown" aria-expanded="false" readonly>
+    <ul class="dropdown-menu" aria-labelledby="combobox">
+      <% @plan.steps.each do |step| %>
+        <% if step.start_time.present? && step.end_time.present? %>
+          <% start_minutes = step.start_time.hour * 60 + step.start_time.min %>
+          <% end_minutes = step.end_time.hour * 60 + step.end_time.min %>
+          <button class="dropdown-item" type="button" data-id="<%= step.id %>" data-start="<%= start_minutes %>" data-end="<%= end_minutes %>" 
+            data-start-time="<%= step.start_time %>" data-end-time="<%= step.end_time %>" 
+            data-break1-start-time="<%= step.break1_start_time %>" data-break1-end-time="<%= step.break1_end_time %>" 
+            data-break2-start-time="<%= step.break2_start_time %>" data-break2-end-time="<%= step.break2_end_time %>">
+            <%= step.start_time.strftime('%Y-%m-%d %H:%M') + "~" + step.end_time.strftime('%H:%M') %>
+          </button>
+        <% else %>
+          <!-- Handle case when start_time or end_time is nil -->
+          <button class="dropdown-item" type="button" data-id="<%= step.id %>" data-start="0" data-end="0" 
+            data-start-time="<%= step.start_time %>" data-end-time="<%= step.end_time %>" 
+            data-break1-start-time="<%= step.break1_start_time %>" data-break1-end-time="<%= step.break1_end_time %>" 
+            data-break2-start-time="<%= step.break2_start_time %>" data-break2-end-time="<%= step.break2_end_time %>">
+            No Time Set
+          </button>
+        <% end %>
+      <% end %>
+    </ul>
+  </div>
+</div>
 
               </div>
             </div>
@@ -187,7 +213,7 @@
     Search: <input type="text" id="searchInput" placeholder="Search..." oninput="searchTable(this.value)">
       <table class="table" id="itemsTable" style="margin-top: 3em">   
         <thead class="thead-light">
-          <th style="vertical-align: middle;">Name <button class="sort-btn" data-column="0" data-order="asc" data-name="name">&#8597;</button></th>
+          <th style="vertical-align: middle;">Item ID <button class="sort-btn" data-column="0" data-order="asc" data-name="name">&#8597;</button></th>
           <th style="vertical-align: middle;">Item Type <button class="sort-btn" data-column="1" data-order="asc" data-name="type">&#8597;</button></th>
           <th style="vertical-align: middle;">Setup Start <button class="sort-btn" data-column="2" data-order="asc" data-name="time">&#8597;</button></th>
           <th style="vertical-align: middle;">Setup End <button class="sort-btn" data-column="3" data-order="asc" data-name="time">&#8597;</button></th>
@@ -214,6 +240,7 @@
 
   <%= render "plans/createItemModal" %>
   <%= render "plans/updateItemModal" %>
+  <%= render "plans/deleteItemModal" %>
   
 </div>
 <%= javascript_include_tag "items" %>
@@ -671,12 +698,20 @@
         <td>${breakdownStartTime}</td>
         <td>${breakdownEndTime}</td>
         <td><button class="view-dependencies-btn" data-item-id="${item.id}">View Dependency</button></td>
-        <td><button class="edit-btn">Edit</button></td>
-        <td><button class="delete-btn">Delete</button></td>
+        <td><button class="edit-item-btn" data-item-id="${item.id}">Edit</button></td>
+        <td><button class="delete-item-btn">Delete</button></td>
       `;
 
       newRow.querySelector('.view-dependencies-btn').addEventListener('click', function() {
       showItemDependencies(item.id);
+      });
+
+      newRow.querySelector('.edit-item-btn').addEventListener('click', function() {
+        openUpdateModal(item, currentStep, loadItems);
+      });
+
+      newRow.querySelector('.delete-item-btn').addEventListener('click', function() {
+        openDeleteConfirmationModal(item.id, item.name, currentStep, loadItems);
       });
     }
     

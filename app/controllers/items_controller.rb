@@ -7,14 +7,10 @@ class ItemsController < ApplicationController
 
   # POST /items or /items.json
   def create
-    Rails.logger.debug "Item params: #{item_params.inspect}"
-    puts "Item params: #{item_params.inspect}" # Use puts for direct output if logging isn't working
-
     @item = Item.new(item_params.except(:dependencies))
 
     if @item.save
       if params[:item][:dependencies].present?
-        Rails.logger.debug("Dependencies: #{params[:item][:dependencies].inspect}") # anprasa
         dependency_ids = params[:item][:dependencies].map(&:to_i) 
         dependencies = Item.where(id: dependency_ids)
       
@@ -24,6 +20,39 @@ class ItemsController < ApplicationController
       render json: @item, status: :ok
     else
       render json: @item.errors, status: :unprocessable_entity
+    end
+  end
+
+  # PATCH/PUT /items/1 or /items/1.json
+
+  def update
+    @item = Item.find(params[:id])
+  
+    # Assign dependencies if present
+    if params[:item][:dependencies].present?
+      dependency_ids = params[:item][:dependencies].map(&:to_i)
+      dependency_items = Item.where(id: dependency_ids)
+  
+      # Update the item attributes first
+      if @item.update(item_params.except(:dependencies)) # Ensure dependencies are excluded
+        # Assign dependencies to the item
+        @item.dependencies = dependency_items
+  
+        if @item.save
+          render json: { status: 'success', item: @item }, status: :ok
+        else
+          render json: { status: 'error', message: @item.errors.full_messages }, status: :unprocessable_entity
+        end
+      else
+        render json: { status: 'error', message: @item.errors.full_messages }, status: :unprocessable_entity
+      end
+    else
+      # No dependencies provided, just update the item normally
+      if @item.update(item_params)
+        render json: { status: 'success', item: @item }, status: :ok
+      else
+        render json: { status: 'error', message: @item.errors.full_messages }, status: :unprocessable_entity
+      end
     end
   end
 
@@ -40,13 +69,6 @@ class ItemsController < ApplicationController
   def search
     @items = Item.where(step_id: params[:step_id])
     render json: @items
-  end
-
-  # PATCH/PUT /items/1 or /items/1.json
-  def update
-    return unless @item.update(item_params)
-
-    render json: @item, status: :ok
   end
 
   # DELETE /items/1 or /items/1.json

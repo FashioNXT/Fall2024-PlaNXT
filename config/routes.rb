@@ -10,6 +10,8 @@ Rails.application.routes.draw do
     end
     member do
       get :dependencies
+      patch :update
+      delete :destroy
     end
   end
 

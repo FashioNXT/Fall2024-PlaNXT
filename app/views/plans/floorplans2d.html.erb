@@ -118,19 +118,33 @@
                 <p style="margin-bottom:0em">Steps</p>
               </div>
               <div class="col">
-                <div class="dropdown">
-                  <input class="form-control" id="combobox" type="text" data-bs-toggle="dropdown" aria-expanded="false" readonly>
-                  <ul class="dropdown-menu" aria-labelledby="combobox">
-                    <% @plan.steps.each do |step| %>
-                      <% start_minutes = step.start_time.hour * 60 + step.start_time.min %>
-                      <% end_minutes = step.end_time.hour * 60 + step.end_time.min %>
-                      <% start_date =  step.start_date%>
-                      <button class="dropdown-item" type="button" data-id=<%= step.id %> data-start="<%= start_minutes %>" data-end="<%= end_minutes %>" data-start-time="<%= step.start_time%>" data-end-time="<%= step.end_time %>" data-break1-start-time="<%= step.break1_start_time %>" data-break1-end-time="<%= step.break1_end_time %>" data-break2-start-time="<%= step.break2_start_time %>" data-break2-end-time="<%= step.break2_end_time %>"">
-                        <%= step.start_time.strftime('%Y-%m-%d %H:%M') + "~" + step.end_time.strftime('%H:%M') %>
-                      </button>
-                    <% end %>
-                  </ul>
-                </div>
+  <div class="dropdown">
+    <input class="form-control" id="combobox" type="text" data-bs-toggle="dropdown" aria-expanded="false" readonly>
+    <ul class="dropdown-menu" aria-labelledby="combobox">
+      <% @plan.steps.each do |step| %>
+        <% if step.start_time.present? && step.end_time.present? %>
+          <% start_minutes = step.start_time.hour * 60 + step.start_time.min %>
+          <% end_minutes = step.end_time.hour * 60 + step.end_time.min %>
+          <button class="dropdown-item" type="button" data-id="<%= step.id %>" data-start="<%= start_minutes %>" data-end="<%= end_minutes %>" 
+            data-start-time="<%= step.start_time %>" data-end-time="<%= step.end_time %>" 
+            data-break1-start-time="<%= step.break1_start_time %>" data-break1-end-time="<%= step.break1_end_time %>" 
+            data-break2-start-time="<%= step.break2_start_time %>" data-break2-end-time="<%= step.break2_end_time %>">
+            <%= step.start_time.strftime('%Y-%m-%d %H:%M') + "~" + step.end_time.strftime('%H:%M') %>
+          </button>
+        <% else %>
+          <!-- Handle case when start_time or end_time is nil -->
+          <button class="dropdown-item" type="button" data-id="<%= step.id %>" data-start="0" data-end="0" 
+            data-start-time="<%= step.start_time %>" data-end-time="<%= step.end_time %>" 
+            data-break1-start-time="<%= step.break1_start_time %>" data-break1-end-time="<%= step.break1_end_time %>" 
+            data-break2-start-time="<%= step.break2_start_time %>" data-break2-end-time="<%= step.break2_end_time %>">
+            No Time Set
+          </button>
+        <% end %>
+      <% end %>
+    </ul>
+  </div>
+</div>
+
               </div>
             </div>
           </div>
@@ -167,6 +181,9 @@
           <th style="vertical-align: middle;">Setup End <button class="sort-btn" data-column="3" data-order="asc" data-name="time">&#8597;</button></th>
           <th style="vertical-align: middle;">Breakdown Start <button class="sort-btn" data-column="4" data-order="asc" data-name="time">&#8597;</button></th>
           <th style="vertical-align: middle;">Breakdown End <button class="sort-btn" data-column="5" data-order="asc" data-name="time">&#8597;</button></th>
+          <th style="vertical-align: middle;"></th>
+          <th style="vertical-align: middle;"></th>
+          <th style="vertical-align: middle;"></th>
         </thead>
         <tbody id="items-table-body">
           <!-- Table rows will be added dynamically -->
@@ -608,13 +625,21 @@
       const newRow = tableBody.insertRow();
 
       newRow.innerHTML = `
-        <td>item-${items.length}</td>
+        <td>item-${item.id}</td>
         <td>${item.name}</td>
         <td>${setupStartTime}</td>
         <td>${setupEndTime}</td>
         <td>${breakdownStartTime}</td>
         <td>${breakdownEndTime}</td>
+        <td><button class="view-dependencies-btn" data-item-id="${item.id}">View Dependency</button></td>
+        <td><button class="edit-btn">Edit</button></td>
+        <td><button class="delete-btn">Delete</button></td>
       `;
+
+      // Add event listener for the "View dependencies" button
+      newRow.querySelector('.view-dependencies-btn').addEventListener('click', function() {
+      showItemDependencies(item.id);
+      });
     }
     
     // Function to remove a row from the table
@@ -629,6 +654,45 @@
         }
       }
     }
+
+    function showItemDependencies(itemId) {
+  // Fetch the item object and its dependencies from the backend
+  fetch(`/items/${itemId}/dependencies`) // You should implement this route on the server to return dependencies
+    .then(response => response.json())
+    .then(dependencies => {
+      const item = items.find(item => item.id == itemId);
+      
+      // Create and show the popup
+      const popup = document.createElement('div');
+      popup.className = 'popup';
+      popup.innerHTML = `
+        <div class="popup-content">
+          <h3>Dependencies for ${item.name}</h3>
+          <ul>
+            ${dependencies.map(dep => `
+              <li>
+                (ID ${dep.id}): ${dep.name}
+              </li>
+            `).join('')}
+          </ul>
+          <button class="close-popup">Close</button>
+        </div>
+      `;
+
+      // Append the popup to the body
+      document.body.appendChild(popup);
+
+      // Add event listener for closing the popup
+      popup.querySelector('.close-popup').addEventListener('click', function() {
+        document.body.removeChild(popup);
+      });
+    })
+    .catch(error => {
+      console.error('Error fetching dependencies:', error);
+    });
+}
+
+
 
 
     draggables.forEach(makeDraggable);
@@ -900,6 +964,68 @@ function searchTable(query) {
 .sort-btn:hover {
     color: #007bff; /* Highlight on hover */
 }
+
+
+  .view-dependencies-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+
+  .view-dependencies-btn:hover {
+    background-color: #0056b3;
+  }
+
+  .popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .popup-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .popup-content ul {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  .popup-content li {
+    padding: 5px 0;
+    font-size: 14px;
+  }
+
+  .popup-content li span {
+    color: #007bff; /* Add color for item id */
+    font-weight: bold;
+  }
+
+  .close-popup {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+
+  .close-popup:hover {
+    background-color: #218838;
+  }
+
 
   .disabled-label {
     color: #6c757d; /* This is Bootstrap's default for disabled text */

@@ -41,6 +41,16 @@
                 </div>
                 <div class="row g-3 align-items-center" style="margin-top:1em">
                     <div class="col-auto">
+                        <label for="createItemDependencies" class="col-form-label">Dependencies</label>
+                    </div>
+                    <div class="col-auto">
+                        <select id="createItemDependencies" class="form-select" multiple>
+                            <!-- Options will be populated dynamically -->
+                        </select>
+                    </div>
+                </div>
+                <div class="row g-3 align-items-center" style="margin-top:1em">
+                    <div class="col-auto">
                         <label for="createItemSetupStartTime" class="col-form-label">Setup Start</label>
                     </div>
                     <div class="col-auto">
@@ -89,6 +99,33 @@
         document.getElementById('createItemWidth').value = item.width;
         document.getElementById('createItemDepth').value = item.depth;
         document.getElementById('createItemRotation').value = 0;
+        // Fetch all items from the database for the dependency dropdown
+        fetch(`/items/search?step_id=${selectedStepId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();  // Parse the response into JSON
+            })
+            .then(items => {  // Now we only receive "items", which is the parsed JSON
+                console.log("res 2", items); // Items will contain the actual data
+                console.log("selectedStepId", selectedStepId);
+
+        const dependencyDropdown = document.getElementById('createItemDependencies');
+        dependencyDropdown.innerHTML = ''; // Clear existing options
+
+        items.forEach(function(dependencyItem) {
+            const option = document.createElement('option');
+            option.value = dependencyItem.id;
+            option.textContent = dependencyItem.id + ": " + dependencyItem.name;
+            dependencyDropdown.appendChild(option);
+        });
+    })
+    .catch(error => {
+        console.error('Error fetching items for dependencies:', error);
+    });
+
+
         document.getElementById('createItemSetupStartTime').value = parseDateTime(setupStartTime);
         document.getElementById('createItemSetupEndTime').value = parseDateTime(setupEndTime);
         document.getElementById('createItemBreakdownStartTime').value = parseDateTime(setupStartTime);
@@ -101,6 +138,8 @@
             var depth = document.getElementById('createItemDepth').value;
             var rotation = document.getElementById('createItemRotation').value;
             var description = document.getElementById('createItemDescription').value;
+            // Get the selected dependencies
+            const selectedDependencies = Array.from(document.getElementById('createItemDependencies').selectedOptions).map(option => option.value);
             var setupStartTime = document.getElementById('createItemSetupStartTime').value + ":00";
             var setupEndTime = document.getElementById('createItemSetupEndTime').value + ":00";
             var breakdownStartTime = document.getElementById('createItemBreakdownStartTime').value + ":00";
@@ -130,6 +169,7 @@
                 xpos: x/(ratio)+inch2feet*width/2,
                 ypos: 0,
                 zpos: y/(ratio)+inch2feet*depth/2,
+                dependencies: selectedDependencies // Add the dependencies here
             }, selectedStepId, loadItems);
         };
     };
@@ -158,6 +198,7 @@
                 setup_end_time: item.setupEndTime,
                 breakdown_start_time: item.breakdownStartTime,
                 breakdown_end_time: item.breakdownEndTime,
+                dependencies: item.dependencies // Send dependencies
 
             } 
           })

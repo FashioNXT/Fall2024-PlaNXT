@@ -122,6 +122,10 @@ class PlansController < ApplicationController
       'end_time' => @plan.steps.first.end_time
     }
 
+    json_content['step_id'] = {
+      'step_id' => @plan.steps.first.items[0].step_id
+    }
+
     # Update the corners of the floorplan
     json_content['floorplan']['corners'] = {
       '7922010e-f5f3-2e53-46f4-3819ea8cdc12' => {

@@ -160,15 +160,27 @@ RSpec.describe ItemsController, type: :controller do
 
   # describe "when we want to delete a item" do
   describe 'DELETE #destroy' do
+    let!(:item3) { create(:item) }
+
     it 'destroys the requested item' do
       expect do
         delete :destroy, params: { id: item3.id }, format: :json
       end.to change(Item, :count).by(-1)
     end
 
-    it 'returns a no content status' do
+    it 'returns a success message and status ok' do
       delete :destroy, params: { id: item3.id }, format: :json
-      expect(response).to have_http_status(:no_content)
+      expect(response).to have_http_status(:ok)
+      expect(JSON.parse(response.body)).to eq({ 'message' => 'Item successfully deleted' })
+    end
+
+    it 'returns an error message when deletion fails' do
+      allow_any_instance_of(Item).to receive(:destroy).and_return(false)
+
+      delete :destroy, params: { id: item3.id }, format: :json
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(JSON.parse(response.body)).to eq({ 'error' => 'Failed to delete item' })
     end
   end
+
 end

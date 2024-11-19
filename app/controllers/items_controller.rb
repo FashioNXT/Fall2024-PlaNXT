@@ -74,12 +74,15 @@ class ItemsController < ApplicationController
   # DELETE /items/1 or /items/1.json
   def destroy
     if @item.destroy
-      render json: { message: 'Item successfully deleted' }, status: :ok
+      respond_to do |format|
+        format.json { render json: { message: 'Item successfully deleted' }, status: :ok }
+      end
     else
-      render json: { error: 'Failed to delete item' }, status: :unprocessable_entity
+      respond_to do |format|
+        format.json { render json: { error: 'Failed to delete item' }, status: :unprocessable_entity }
+      end
     end
   end
-
 
   # Retrieves all items from the database and assigns them to the instance variable
   # @items to be used in plans_controller to download all data.

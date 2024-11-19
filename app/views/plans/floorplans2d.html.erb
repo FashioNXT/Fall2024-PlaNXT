@@ -130,58 +130,32 @@
                 <p style="margin-bottom:0em">Steps</p>
               </div>
               <div class="col">
-  <div class="dropdown">
-    <input class="form-control" id="combobox" type="text" data-bs-toggle="dropdown" aria-expanded="false" readonly>
-    <ul class="dropdown-menu" aria-labelledby="combobox">
-      <% @plan.steps.each do |step| %>
-        <% if step.start_time.present? && step.end_time.present? %>
-          <% start_minutes = step.start_time.hour * 60 + step.start_time.min %>
-          <% end_minutes = step.end_time.hour * 60 + step.end_time.min %>
-          <button class="dropdown-item" type="button" data-id="<%= step.id %>" data-start="<%= start_minutes %>" data-end="<%= end_minutes %>" 
-            data-start-time="<%= step.start_time %>" data-end-time="<%= step.end_time %>" 
-            data-break1-start-time="<%= step.break1_start_time %>" data-break1-end-time="<%= step.break1_end_time %>" 
-            data-break2-start-time="<%= step.break2_start_time %>" data-break2-end-time="<%= step.break2_end_time %>">
-            <%= step.start_time.strftime('%Y-%m-%d %H:%M') + "~" + step.end_time.strftime('%H:%M') %>
-          </button>
-        <% else %>
-          <!-- Handle case when start_time or end_time is nil -->
-          <button class="dropdown-item" type="button" data-id="<%= step.id %>" data-start="0" data-end="0" 
-            data-start-time="<%= step.start_time %>" data-end-time="<%= step.end_time %>" 
-            data-break1-start-time="<%= step.break1_start_time %>" data-break1-end-time="<%= step.break1_end_time %>" 
-            data-break2-start-time="<%= step.break2_start_time %>" data-break2-end-time="<%= step.break2_end_time %>">
-            No Time Set
-          </button>
-        <% end %>
-      <% end %>
-    </ul>
-  </div>
-</div>
-  <div class="dropdown">
-    <input class="form-control" id="combobox" type="text" data-bs-toggle="dropdown" aria-expanded="false" readonly>
-    <ul class="dropdown-menu" aria-labelledby="combobox">
-      <% @plan.steps.each do |step| %>
-        <% if step.start_time.present? && step.end_time.present? %>
-          <% start_minutes = step.start_time.hour * 60 + step.start_time.min %>
-          <% end_minutes = step.end_time.hour * 60 + step.end_time.min %>
-          <button class="dropdown-item" type="button" data-id="<%= step.id %>" data-start="<%= start_minutes %>" data-end="<%= end_minutes %>" 
-            data-start-time="<%= step.start_time %>" data-end-time="<%= step.end_time %>" 
-            data-break1-start-time="<%= step.break1_start_time %>" data-break1-end-time="<%= step.break1_end_time %>" 
-            data-break2-start-time="<%= step.break2_start_time %>" data-break2-end-time="<%= step.break2_end_time %>">
-            <%= step.start_time.strftime('%Y-%m-%d %H:%M') + "~" + step.end_time.strftime('%H:%M') %>
-          </button>
-        <% else %>
-          <!-- Handle case when start_time or end_time is nil -->
-          <button class="dropdown-item" type="button" data-id="<%= step.id %>" data-start="0" data-end="0" 
-            data-start-time="<%= step.start_time %>" data-end-time="<%= step.end_time %>" 
-            data-break1-start-time="<%= step.break1_start_time %>" data-break1-end-time="<%= step.break1_end_time %>" 
-            data-break2-start-time="<%= step.break2_start_time %>" data-break2-end-time="<%= step.break2_end_time %>">
-            No Time Set
-          </button>
-        <% end %>
-      <% end %>
-    </ul>
-  </div>
-</div>
+                <div class="dropdown">
+                  <input class="form-control" id="combobox" type="text" data-bs-toggle="dropdown" aria-expanded="false" readonly>
+                  <ul class="dropdown-menu" aria-labelledby="combobox">
+                    <% @plan.steps.each do |step| %>
+                      <% if step.start_time.present? && step.end_time.present? %>
+                        <% start_minutes = step.start_time.hour * 60 + step.start_time.min %>
+                        <% end_minutes = step.end_time.hour * 60 + step.end_time.min %>
+                        <button class="dropdown-item" type="button" data-id="<%= step.id %>" data-start="<%= start_minutes %>" data-end="<%= end_minutes %>" 
+                          data-start-time="<%= step.start_time %>" data-end-time="<%= step.end_time %>" 
+                          data-break1-start-time="<%= step.break1_start_time %>" data-break1-end-time="<%= step.break1_end_time %>" 
+                          data-break2-start-time="<%= step.break2_start_time %>" data-break2-end-time="<%= step.break2_end_time %>">
+                          <%= step.start_time.strftime('%Y-%m-%d %H:%M') + "~" + step.end_time.strftime('%H:%M') %>
+                        </button>
+                      <% else %>
+                        <!-- Handle case when start_time or end_time is nil -->
+                        <button class="dropdown-item" type="button" data-id="<%= step.id %>" data-start="0" data-end="0" 
+                          data-start-time="<%= step.start_time %>" data-end-time="<%= step.end_time %>" 
+                          data-break1-start-time="<%= step.break1_start_time %>" data-break1-end-time="<%= step.break1_end_time %>" 
+                          data-break2-start-time="<%= step.break2_start_time %>" data-break2-end-time="<%= step.break2_end_time %>">
+                          No Time Set
+                        </button>
+                      <% end %>
+                    <% end %>
+                  </ul>
+                </div>
+              </div>
 
               </div>
             </div>

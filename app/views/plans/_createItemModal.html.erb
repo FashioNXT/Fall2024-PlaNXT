@@ -189,25 +189,23 @@
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-                return response.json();  // Parse the response into JSON
+                return response.json();
             })
-            .then(items => {  // Now we only receive "items", which is the parsed JSON
-                console.log("res 2", items); // Items will contain the actual data
-                console.log("selectedStepId", selectedStepId);
+            .then(items => {
 
-        const dependencyDropdown = document.getElementById('createItemDependencies');
-        dependencyDropdown.innerHTML = ''; // Clear existing options
+                const dependencyDropdown = document.getElementById('createItemDependencies');
+                dependencyDropdown.innerHTML = ''; // Clear existing options
 
-        items.forEach(function(dependencyItem) {
-            const option = document.createElement('option');
-            option.value = dependencyItem.id;
-            option.textContent = dependencyItem.id + ": " + dependencyItem.name;
-            dependencyDropdown.appendChild(option);
-        });
-    })
-    .catch(error => {
-        console.error('Error fetching items for dependencies:', error);
-    });
+                items.forEach(function(dependencyItem) {
+                    const option = document.createElement('option');
+                    option.value = dependencyItem.id;
+                    option.textContent = dependencyItem.id + ": " + dependencyItem.name;
+                    dependencyDropdown.appendChild(option);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching items for dependencies:', error);
+            });
 
 
         document.getElementById('createItemSetupStartTime').value = parseDateTime(setupStartTime);
@@ -220,7 +218,6 @@
             var depth = document.getElementById('createItemDepth').value;
             var rotation = document.getElementById('createItemRotation').value;
             var description = document.getElementById('createItemDescription').value;
-            // Get the selected dependencies
             const selectedDependencies = Array.from(document.getElementById('createItemDependencies').selectedOptions).map(option => option.value);
             var setupStartTime = document.getElementById('createItemSetupStartTime').value + ":00";
             var setupEndTime = document.getElementById('createItemSetupEndTime').value + ":00";
@@ -249,7 +246,7 @@
                 xpos: x/(ratio)+inch2feet*width/2,
                 ypos: 0,
                 zpos: y/(ratio)+inch2feet*depth/2,
-                dependencies: selectedDependencies // Add the dependencies here
+                dependencies: selectedDependencies
             }, selectedStepId, loadItems);
         };
     };
@@ -278,7 +275,7 @@
                 setup_end_time: item.setupEndTime,
                 breakdown_start_time: item.breakdownStartTime,
                 breakdown_end_time: item.breakdownEndTime,
-                dependencies: item.dependencies // Send dependencies
+                dependencies: item.dependencies
 
             } 
           })
@@ -293,4 +290,3 @@
     }
 
 </script>
-

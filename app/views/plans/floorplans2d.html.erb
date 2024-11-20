@@ -211,6 +211,33 @@
       <button type="button" class="btn btn-primary" id="preview3dLink">Preview in 3D</button>
     </div>
   </div>
+  <!-- Dependencies Modal -->
+  <div id="dependenciesModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Item Dependencies</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <table class="table" id="dependenciesTable" style="margin-top: 1em;">
+            <thead class="thead-light">
+              <tr>
+                <th style="vertical-align: middle;">Item ID</th>
+                <th style="vertical-align: middle;">Item Name</th>
+              </tr>
+            </thead>
+            <tbody id="dependenciesBody">
+              <!-- Dependencies rows will be added dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
   <%= render "plans/createItemModal" %>
   <%= render "plans/updateItemModal" %>
@@ -671,23 +698,33 @@
         <td>${setupEndTime}</td>
         <td>${breakdownStartTime}</td>
         <td>${breakdownEndTime}</td>
-        <td><button class="view-dependencies-btn" data-item-id="${item.id}">View Dependency</button></td>
-        <td><button class="edit-item-btn" data-item-id="${item.id}">Edit</button></td>
-        <td><button class="delete-item-btn">Delete</button></td>
+        <td><button type="button" class="view-dependencies-btn btn btn-primary" data-item-id="${item.id}">View Dependencies</button></td>
+        <td>
+          <a href="#" class="edit-item-btn btn btn-primary" data-item-id="${item.id}" style="margin: 0 1em 0 0;">
+              <i class="fas fa-edit"></i>
+          </a>
+        </td>
+        <td>
+          <a href="#" class="delete-item-btn btn btn-danger" data-item-id="${item.id}">
+              <i class="fas fa-trash"></i>
+          </a>
+        </td>
       `;
 
       newRow.querySelector('.view-dependencies-btn').addEventListener('click', function() {
       showItemDependencies(item.id);
       });
 
-      newRow.querySelector('.edit-item-btn').addEventListener('click', function() {
+      newRow.querySelector('.edit-item-btn').addEventListener('click', function(event) {
+        event.preventDefault();
         openUpdateModal(item, currentStep, loadItems);
-      });
+    });
 
-      newRow.querySelector('.delete-item-btn').addEventListener('click', function() {
-        openDeleteConfirmationModal(item.id, item.name, currentStep, loadItems);
-      });
-    }
+      newRow.querySelector('.delete-item-btn').addEventListener('click', function(event) {
+      event.preventDefault();
+      openDeleteConfirmationModal(item.id, item.name, currentStep, loadItems);
+    });
+  }
     
     // Function to remove a row from the table
     function removeTableRow(itemId) {
@@ -703,36 +740,28 @@
     }
 
     function showItemDependencies(itemId) {
+      $('#dependenciesModal').modal('show');
       fetch(`/items/${itemId}/dependencies`)
-        .then(response => response.json())
-        .then(dependencies => {
-          const item = items.find(item => item.id == itemId);
-          
-          // Create and show the popup
-          const popup = document.createElement('div');
-          popup.className = 'popup';
-          popup.innerHTML = `
-            <div class="popup-content">
-              <h3>Dependencies for ${item.name}</h3>
-              <ul>
-                ${dependencies.map(dep => `
-                  <li>
-                    (ID ${dep.id}): ${dep.name}
-                  </li>
-                `).join('')}
-              </ul>
-              <button class="close-popup">Close</button>
-            </div>
+      .then(response => response.json())
+      .then(dependencies => {
+        const dependenciesBody = document.getElementById('dependenciesBody');
+        dependenciesBody.innerHTML = ''; // Clear any existing rows
+
+        // Populate table rows with dependency data
+        dependencies.forEach(dep => {
+          const newRow = document.createElement('tr');
+          newRow.innerHTML = `
+            <td>${dep.id}</td>
+            <td>${dep.name}</td>
           `;
+          dependenciesBody.appendChild(newRow);
+        });
 
-          document.body.appendChild(popup);
-
-          popup.querySelector('.close-popup').addEventListener('click', function() {
-            document.body.removeChild(popup);
-          });
-        })
-        .catch(error => {
-          console.error('Error fetching dependencies:', error);
+        // Show the modal using jQuery
+        $('#dependenciesModal').modal('show');
+      })
+      .catch(error => {
+        console.error('Error fetching dependencies:', error);
       });
     }
 

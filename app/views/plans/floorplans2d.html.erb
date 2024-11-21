@@ -166,27 +166,18 @@
   </div>
 
   <div class="container">
-    <div> 
 
-      <%# <table id="itemsTableee" class="display table" style="margin-top: 3em">
-        <thead class="thead-light">
-            <tr>
-                <th>Name</th>
-                <th>Item Type</th>
-                <th>Setup Start</th>
-                <th>Setup End</th>
-                <th>Breakdown Start</th>
-                <th>Breakdown End</th>
-            </tr>
-        </thead>
-        <tbody id="items-tables-body">
-            <!-- Table rows will be added dynamically -->
-        </tbody>
-    </table> %>
-
-    Search: <input type="text" id="searchInput" placeholder="Search..." oninput="searchTable(this.value)">
-      <table class="table" id="itemsTable" style="margin-top: 3em">   
-        <thead class="thead-light">
+    <div class="button-container d-flex" style="margin-bottom: 1em">
+      Search: 
+      <input type="text" id="searchInput" placeholder="Search..." oninput="searchTable(this.value)" style="margin-left: 1em;margin-right: 3em;">
+      <%= link_to "Back", plans_path, class: "btn btn-secondary" %>
+      <%= link_to "Save", download_all_data_path, method: :post, class: "btn btn-primary me-auto", style:"background-color:#478ac9; margin-left: 1em;" %>
+      <!-- Preview in 3D button that links to Preview in 3D page -->
+      <button type="button" class="btn btn-primary" id="preview3dLink">Preview in 3D</button>
+    </div>
+    <div style="max-height: 500px; overflow-y: auto; border: 1px solid #ddd; margin-bottom: 2em;">             
+      <table class="table" id="itemsTable" style="border-collapse: separate; width: 100%;">   
+        <thead class="thead-light" style="position: sticky; top: 0; background-color: #fff; z-index: 1;">
           <th style="vertical-align: middle;">Item ID <button class="sort-btn" data-column="0" data-order="asc" data-name="name">&#8597;</button></th>
           <th style="vertical-align: middle;">Item Type <button class="sort-btn" data-column="1" data-order="asc" data-name="type">&#8597;</button></th>
           <th style="vertical-align: middle;">Setup Start <button class="sort-btn" data-column="2" data-order="asc" data-name="time">&#8597;</button></th>
@@ -204,12 +195,6 @@
       </table>
     <div>
 
-    <div class="button-container d-flex" style="margin-top: 3em">
-      <%= link_to "Back", plans_path, class: "btn btn-secondary" %>
-      <%= link_to "Save", download_all_data_path, method: :post, class: "btn btn-primary me-auto", style:"background-color:#478ac9; margin-left: 1em;" %>
-      <!--Preview in 3D button that links to Preview in 3D page-->
-      <button type="button" class="btn btn-primary" id="preview3dLink">Preview in 3D</button>
-    </div>
   </div>
   <!-- Dependencies Modal -->
   <div id="dependenciesModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">

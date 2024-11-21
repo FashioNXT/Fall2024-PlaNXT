@@ -45,16 +45,8 @@
                         <input id="createItemDescription" class="form-control">
                     </div>
                 </div>
-                <div class="row g-3 align-items-center mb-3" style="margin-top:1em">
-                    <div class="col-3">
-                        <label for="createItemSetupStartTime" class="col-form-label">Setup Start</label>
-                    </div>
-                    <div class="col-9">
-                        <input type="datetime-local" id="createItemSetupStartTime" class="form-control datetimepicker-input">
-                    </div>
-                </div>
 
-                <div class="row align-items-center mb-3">
+                 <div class="row align-items-center mb-3">
                     <div class="col-3">
                         <label for="createItemDependencies" class="col-form-label">Dependencies</label>
                     </div>
@@ -62,6 +54,15 @@
                         <select id="createItemDependencies" class="form-select" multiple>
                             <!-- Options will be populated dynamically -->
                         </select>
+                    </div>
+                </div>
+
+                <div class="row g-3 align-items-center mb-3" style="margin-top:1em">
+                    <div class="col-3">
+                        <label for="createItemSetupStartTime" class="col-form-label">Setup Start</label>
+                    </div>
+                    <div class="col-9">
+                        <input type="datetime-local" id="createItemSetupStartTime" class="form-control datetimepicker-input">
                     </div>
                 </div>
 
@@ -209,7 +210,11 @@
 
 
         document.getElementById('createItemSetupStartTime').value = parseDateTime(setupStartTime);
+        document.getElementById('createItemSetupDuration').value = '';
+        document.getElementById('createItemSetupEndTime').value = '';
         document.getElementById('createItemBreakdownStartTime').value = parseDateTime(setupStartTime);
+        document.getElementById('createItemBreakdownDuration').value = '';
+        document.getElementById('createItemBreakdownEndTime').value = '';
 
         // Set the onclick function for the confirm button
         document.getElementById('confirmCreateBtn').onclick = function() {

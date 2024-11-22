@@ -3,6 +3,8 @@
 # spec/models/user_spec.rb
 
 require 'rails_helper'
+require 'ostruct'
+
 
 RSpec.describe User, type: :model do
   describe '.from_omniauth' do

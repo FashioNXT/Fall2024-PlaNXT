@@ -77,6 +77,19 @@ RSpec.describe ItemsController, type: :controller do
     )
   end
 
+  describe 'GET #index' do
+    it 'returns a successful response' do
+      get :index
+      expect(response).to have_http_status(:success)
+    end
+    it 'returns all items as JSON' do
+      get :index
+      json_response = JSON.parse(response.body)
+
+      expect(json_response.length).to eq(3)
+    end
+  end
+
   describe 'when trying to add the item to the step' do
     context 'with valid parameters' do
       it 'add the item to the database' do

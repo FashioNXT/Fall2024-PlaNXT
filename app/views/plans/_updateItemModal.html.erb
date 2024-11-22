@@ -45,6 +45,8 @@
                         <input id="updateItemDescription" class="form-control">
                     </div>
                 </div>
+
+                <!-- Dependency items -->
                 <div class="row align-items-center mb-3" style="margin-top:1em">
                     <div class="col-3">
                         <label for="updateItemDependencies" class="col-form-label">Dependencies</label>
@@ -209,34 +211,44 @@
         document.getElementById('updateItemBreakdownEndTime').value = parseDateTime(item.breakdown_end_time);
         // Fetch dependencies for the item being updated
         fetch(`/items/${item.id}/dependencies`)
-            .then(response => response.json())
-            .then(dependencies => {
-                const dependencyIds = new Set(dependencies.map(dep => dep.id));
-                fetch(`/items/search?step_id=${selectedStepId}`)
-                    .then(response => response.json())
-                    .then(items => {
-                        const dependencyDropdown = document.getElementById('updateItemDependencies');
-                        dependencyDropdown.innerHTML = ''; // Clear existing options
-                        // Populate the dropdown with items
-                        items.forEach(function(dependencyItem) {
+        .then(response => response.json())
+        .then(dependencies => {
+            const dependencyIds = new Set(dependencies.map(dep => dep.id));
+
+            fetch(`/items/search?step_id=${selectedStepId}`)
+                .then(response => response.json())
+                .then(items => {
+                    const dependencyDropdown = document.getElementById('updateItemDependencies');
+                    dependencyDropdown.innerHTML = '';
+
+                    // Populate the dropdown with items, excluding the current item
+                    items.forEach(function(dependencyItem) {
+                        if (dependencyItem.id !== item.id) {
                             const option = document.createElement('option');
                             option.value = dependencyItem.id;
                             option.textContent = `${dependencyItem.id}: ${dependencyItem.name}`;
+
                             // If the item is a dependency, mark it as selected
                             if (dependencyIds.has(dependencyItem.id)) {
                                 option.selected = true;
                             }
                             dependencyDropdown.appendChild(option);
-                        });
-                    })
-                    .catch(error => {
-                        console.error('Error fetching items for dependencies:', error);
+                        }
                     });
-            })
-            .catch(error => {
-                console.error('Error fetching item dependencies:', error);
-            });
-
+                    // Add a "None" option at the top for no dependencies
+                    const noDependencyOption = document.createElement('option');
+                    noDependencyOption.value = '';
+                    noDependencyOption.textContent = 'None';
+                    noDependencyOption.selected = (dependencyIds.size === 0);
+                    dependencyDropdown.insertBefore(noDependencyOption, dependencyDropdown.firstChild);
+                })
+                .catch(error => {
+                    console.error('Error fetching items for dependencies:', error);
+                });
+        })
+        .catch(error => {
+            console.error('Error fetching item dependencies:', error);
+        });
 
         // Set the onclick function for the confirm button
         document.getElementById('confirmUpdateBtn').onclick = function() {
@@ -249,7 +261,9 @@
             var setupEndTime = document.getElementById('updateItemSetupEndTime').value + ":00";
             var breakdownStartTime = document.getElementById('updateItemBreakdownStartTime').value + ":00";
             var breakdownEndTime = document.getElementById('updateItemBreakdownEndTime').value + ":00";
-            const selectedDependencies = Array.from(document.getElementById('updateItemDependencies').selectedOptions).map(option => option.value);
+            const selectedDependencies = Array.from(document.getElementById('updateItemDependencies').selectedOptions)
+                                                .map(option => option.value)
+                                                .filter(value => value !== '');
             var inch2feet = 1/12;
             // update the item
             updateItem({      

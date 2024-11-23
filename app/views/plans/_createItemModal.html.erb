@@ -209,10 +209,15 @@
             });
 
 
-        document.getElementById('createItemSetupStartTime').value = parseDateTime(setupStartTime);
+        let slider = document.getElementById('myRange')
+        let sliderMinutes = slider.value - slider.min
+        let startTime = new Date(setupStartTime)
+        let currTimelineBarTime = new Date(startTime.getTime() + sliderMinutes * 60 * 1000)
+        console.log(sliderMinutes, currTimelineBarTime.toISOString())
+        document.getElementById('createItemSetupStartTime').value = parseDateTime(currTimelineBarTime)
         document.getElementById('createItemSetupDuration').value = '';
         document.getElementById('createItemSetupEndTime').value = '';
-        document.getElementById('createItemBreakdownStartTime').value = parseDateTime(setupStartTime);
+        document.getElementById('createItemBreakdownStartTime').value = parseDateTime(currTimelineBarTime)
         document.getElementById('createItemBreakdownDuration').value = '';
         document.getElementById('createItemBreakdownEndTime').value = '';
 

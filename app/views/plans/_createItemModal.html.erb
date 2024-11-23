@@ -210,7 +210,7 @@
 
 
         let slider = document.getElementById('myRange')
-        let sliderMinutes = slider.value - slider.min
+        let sliderMinutes = slider.value
         let startTime = new Date(setupStartTime)
         let currTimelineBarTime = new Date(startTime.getTime() + sliderMinutes * 60 * 1000)
         console.log(sliderMinutes, currTimelineBarTime.toISOString())

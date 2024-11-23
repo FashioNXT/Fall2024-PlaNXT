@@ -88,7 +88,9 @@
     </div>
     <div class="col-6 dropzone-container">
       <div id="dropzone"></div>
-      <input type="range"  class="slider" id="myRange" style="width: 80%"  >
+      <input type="range"  class="slider" id="myRange" style="width: 80%"  list='myRange-ticks'>
+      <%# Not supported by all browsers %>
+      <datalist id='myRange-ticks'></datalist>
       <p id="rangeValue">Plan time: </p>
     </div>
     <div class="accordion-container col-3">
@@ -137,7 +139,8 @@
                       <% if step.start_time.present? && step.end_time.present? %>
                         <% start_minutes = step.start_time.hour * 60 + step.start_time.min %>
                         <% end_minutes = step.end_time.hour * 60 + step.end_time.min %>
-                        <button class="dropdown-item" type="button" data-id="<%= step.id %>" data-start="<%= start_minutes %>" data-end="<%= end_minutes %>" 
+                        <% total_minutes = end_minutes - start_minutes %>
+                        <button class="dropdown-item" type="button" data-id="<%= step.id %>" data-start="<%= 0 %>" data-end="<%= total_minutes %>" 
                           data-start-time="<%= step.start_time %>" data-end-time="<%= step.end_time %>" 
                           data-break1-start-time="<%= step.break1_start_time %>" data-break1-end-time="<%= step.break1_end_time %>" 
                           data-break2-start-time="<%= step.break2_start_time %>" data-break2-end-time="<%= step.break2_end_time %>">
@@ -860,7 +863,50 @@
       slider.min = startTime;
       slider.max = endTime;
       slider.value = startTime; // Set initial slider value to start time
-      updateTime(slider.value - slider.min, stepElement.getAttribute('data-start-time'));
+      updateTime(slider.value, stepElement.getAttribute('data-start-time'));
+
+      let ticksList = document.getElementById('myRange-ticks')
+      ticksList.innerHTML = ''
+
+      let addOptionsToTicksDataList = (ticksList, venueStartTime, startTime, endTime, breakNum) => {
+        
+        let venueStartTimeDate = new Date(venueStartTime)
+        let venueStartTimeInMs = venueStartTimeDate.getTime()
+        let breakStartTimeDate = new Date(startTime)
+        let breakEndTimeDate = new Date(endTime)
+        
+        let breakStartTimeMinutes = (breakStartTimeDate.getTime() - venueStartTimeInMs) / 1000 / 60
+        let breakEndTimeMinutes = (breakEndTimeDate.getTime() - venueStartTimeInMs) / 1000 / 60
+
+        const startElem = document.createElement('option')
+        startElem.value = breakStartTimeMinutes
+        startElem.label = 'Break ' + breakNum + ' Start'
+
+        const endElem = document.createElement('option')
+        endElem.value = breakEndTimeMinutes
+        // labels not showing up for some reason
+        endElem.label = 'Break ' + breakNum + ' End'
+
+        ticksList.appendChild(startElem)
+        ticksList.appendChild(endElem)
+      }
+
+      let startTimeText = stepElement.getAttribute('data-start-time')
+      let break1StartTime = stepElement.getAttribute('data-break1-start-time');
+      let break1EndTime = stepElement.getAttribute('data-break1-end-time');
+      let break2StartTime = stepElement.getAttribute('data-break2-start-time');
+      let break2EndTime = stepElement.getAttribute('data-break2-end-time');
+
+      // Absolutely terrible way to do this, there should be a loop
+      if(break1StartTime && break1EndTime) {
+        console.log(break1StartTime, break1EndTime)
+        addOptionsToTicksDataList(ticksList, startTimeText, break1StartTime, break1EndTime, 1)
+      }
+
+      if(break2StartTime && break2EndTime) {
+        addOptionsToTicksDataList(ticksList, startTimeText, break2StartTime, break2EndTime, 2)
+      }
+
     };
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -950,7 +996,7 @@ function searchTable(query) {
 
     slider.oninput = function() {
       start_time = document.querySelector('.dropdown-item[data-id="' + currentStep + '"]').getAttribute('data-start-time');
-      updateTime(slider.value - slider.min, start_time);
+      updateTime(slider.value, start_time);
       showItems(currentStep);
     };
 

@@ -28,26 +28,34 @@ class ItemsController < ApplicationController
   def update
     @item = Item.find(params[:id])
 
-    # Assign dependencies if present
-    if params[:item][:dependencies].present?
-      dependency_ids = params[:item][:dependencies].map(&:to_i)
-      dependency_items = Item.where(id: dependency_ids)
+    # Capture original times before the update
+    original_times = {
+      setup_start_time: @item.setup_start_time,
+      setup_end_time: @item.setup_end_time,
+      breakdown_start_time: @item.breakdown_start_time,
+      breakdown_end_time: @item.breakdown_end_time
+    }
 
-      # Update the item attributes first
-      if @item.update(item_params.except(:dependencies)) # Ensure dependencies are excluded
-        # Assign dependencies to the item
-        @item.dependencies = dependency_items
-
-        if @item.save
-          render json: { status: 'success', item: @item }, status: :ok
-        else
-          render json: { status: 'error', message: @item.errors.full_messages }, status: :unprocessable_entity
-        end
-      else
-        render json: { status: 'error', message: @item.errors.full_messages }, status: :unprocessable_entity
+    # Update item attributes excluding dependencies
+    if @item.update(item_params.except(:dependencies))
+      # Handle dependencies if present in the params
+      if params[:item][:dependencies].present?
+        dependency_ids = params[:item][:dependencies].map(&:to_i)
+        dependencies = Item.where(id: dependency_ids)
+        @item.dependencies = dependencies # Save the dependencies
       end
-    elsif @item.update(item_params)
-      # No dependencies provided, just update the item normally
+
+      # Extract updated times after the update
+      updated_times = {
+        setup_start_time: @item.setup_start_time,
+        setup_end_time: @item.setup_end_time,
+        breakdown_start_time: @item.breakdown_start_time,
+        breakdown_end_time: @item.breakdown_end_time
+      }
+
+      # Recursively update dependent items with proportional changes
+      update_time_dependencies(@item, original_times, updated_times)
+
       render json: { status: 'success', item: @item }, status: :ok
     else
       render json: { status: 'error', message: @item.errors.full_messages }, status: :unprocessable_entity
@@ -104,5 +112,54 @@ class ItemsController < ApplicationController
       :breakdown_start_time, :breakdown_end_time,
       dependencies: []
     )
+  end
+
+  def update_time_dependencies(item, original_times, updated_times, visited = Set.new)
+    return if visited.include?(item.id) # Avoid infinite loops
+
+    visited.add(item.id)
+
+    # Calculate the time differences for start and end times
+    setup_start_time_diff = updated_times[:setup_start_time] - original_times[:setup_start_time]
+    setup_end_time_diff = updated_times[:setup_end_time] - original_times[:setup_end_time]
+    breakdown_start_time_diff = updated_times[:breakdown_start_time] - original_times[:breakdown_start_time]
+    breakdown_end_time_diff = updated_times[:breakdown_end_time] - original_times[:breakdown_end_time]
+
+    setup_time_diff = setup_start_time_diff + (setup_end_time_diff - setup_start_time_diff)
+    breakdown_time_diff = breakdown_start_time_diff + (breakdown_end_time_diff - breakdown_start_time_diff)
+
+    # Print the size of reverse_dependencies
+    reverse_dependencies_size = item.reverse_dependencies.size
+    Rails.logger.info "Item #{item.id} has #{reverse_dependencies_size} reverse dependencies."
+
+    # Update each dependent item
+    item.reverse_dependencies.each do |dependent_item|
+      # Calculate new times for the dependent item
+      new_setup_start_time = dependent_item.setup_start_time + setup_time_diff
+      new_setup_end_time = dependent_item.setup_end_time + setup_time_diff
+      new_breakdown_start_time = dependent_item.breakdown_start_time + breakdown_time_diff
+      new_breakdown_end_time = dependent_item.breakdown_end_time + breakdown_time_diff
+
+      # Update the dependent item's times
+      dependent_item.update(
+        setup_start_time: new_setup_start_time,
+        setup_end_time: new_setup_end_time,
+        breakdown_start_time: new_breakdown_start_time,
+        breakdown_end_time: new_breakdown_end_time
+      )
+
+      # Recursively update the dependent item's dependencies
+      update_time_dependencies(dependent_item, {
+                                 setup_start_time: dependent_item.setup_start_time - setup_start_time_diff,
+                                 setup_end_time: dependent_item.setup_end_time - setup_end_time_diff,
+                                 breakdown_start_time: dependent_item.breakdown_start_time - breakdown_start_time_diff,
+                                 breakdown_end_time: dependent_item.breakdown_end_time - breakdown_end_time_diff
+                               }, {
+                                 setup_start_time: new_setup_start_time,
+                                 setup_end_time: new_setup_end_time,
+                                 breakdown_start_time: new_breakdown_start_time,
+                                 breakdown_end_time: new_breakdown_end_time
+                               }, visited)
+    end
   end
 end

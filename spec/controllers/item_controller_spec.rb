@@ -291,5 +291,74 @@ RSpec.describe ItemsController, type: :controller do
         )
       end
     end
+    describe 'PATCH/PUT #update' do
+  let(:valid_attributes) do
+    {
+      name: 'Updated Item',
+      model: 'Updated Model',
+      width: 150,
+      length: 150,
+      depth: 150,
+      rotation: 45,
+      description: 'Updated description',
+      xpos: 200,
+      ypos: 200,
+      zpos: 200,
+      step_id: plan.steps.first.id
+    }
+  end
+
+  let(:invalid_attributes) do
+    {
+      name: nil,
+      model: 'Invalid Model'
+    }
+  end
+
+  context 'with valid attributes' do
+    it 'updates the item and dependencies' do
+      put :update, params: {
+        id: item1.id,
+        item: valid_attributes.merge(dependencies: [item2.id])
+      }, format: :json
+
+      item1.reload
+      expect(item1.name).to eq('Updated Item')
+      expect(item1.model).to eq('Updated Model')
+      expect(item1.dependencies).to include(item2)
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
+  context 'without dependencies' do
+    it 'updates the item without adding dependencies' do
+      put :update, params: {
+        id: item1.id,
+        item: valid_attributes
+      }, format: :json
+
+      item1.reload
+      expect(item1.dependencies).to be_empty
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
+  context 'when dependencies are updated' do
+    it 'replaces the dependencies' do
+      item1.dependencies = [item2]
+      item1.save
+
+      put :update, params: {
+        id: item1.id,
+        item: valid_attributes.merge(dependencies: [item3.id])
+      }, format: :json
+
+      item1.reload
+      expect(item1.dependencies).to eq([item3])
+      expect(response).to have_http_status(:ok)
+    end
+  end
+end
+
   end
 end

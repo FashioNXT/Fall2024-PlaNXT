@@ -78,7 +78,7 @@ Given('I am on the Floor Plan 2D page') do
   # Create a plan with a specific ID or let the database auto-assign an ID
   plan = Plan.create!(name: 'Test Plan', venue_length: 100, venue_width: 50, timezone: 'UTC',
                       created_at: Time.zone.now, updated_at: Time.zone.now)
-  step = plan.steps.create!(start_time: Time.zone.now, end_time: Time.zone.now + 2.hours)
+  plan.steps.create!(start_time: Time.zone.now, end_time: Time.zone.now + 2.hours)
 
   # Visit the floorplans 2D page for the created plan
   visit "/plans/#{plan.id}/floorplans2d"

@@ -5,7 +5,6 @@
 require 'rails_helper'
 require 'ostruct'
 
-
 RSpec.describe User, type: :model do
   describe '.from_omniauth' do
     let(:access_token_data) do

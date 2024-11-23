@@ -16,7 +16,8 @@ RSpec.describe PlansController, type: :controller do
       get :download_all_data
 
       expect(response.content_type).to eq('text/csv')
-      expect(response.headers['Content-Disposition']).to include("attachment; filename=\"plans_and_items_#{Date.today}.csv\"")
+      expect(response.headers['Content-Disposition']).to
+      include("attachment; filename=\"plans_and_items_#{Date.today}.csv\"")
 
       CSV.parse(response.body)
       # Basic checks for CSV content
@@ -28,7 +29,8 @@ RSpec.describe PlansController, type: :controller do
       get :download_all_data
 
       expect(response.content_type).to eq('text/csv')
-      expect(response.headers['Content-Disposition']).to include("attachment; filename=\"plans_and_items_#{Date.today}.csv\"")
+      expect(response.headers['Content-Disposition']).to
+      include("attachment; filename=\"plans_and_items_#{Date.today}.csv\"")
 
       CSV.parse(response.body)
       # Check for header only in CSV
@@ -179,25 +181,24 @@ RSpec.describe PlansController, type: :controller do
   describe PlansController, type: :controller do
     describe 'preview3d' do
       let(:file_path) { Rails.root.join('public', 'floorplan.json') }
-      
+
       it 'writes floorplan' do
         plan = Plan.create!(name: 'Test Plan', venue_length: 100, venue_width: 50, timezone: 'UTC',
-        created_at: Time.zone.now, updated_at: Time.zone.now, id: 0)
+                            created_at: Time.zone.now, updated_at: Time.zone.now, id: 0)
         step = plan.steps.create!(start_time: Time.zone.now, end_time: Time.zone.now + 2.hours)
         step.items.create!(name: 'Item 1', model: 'Model 1', width: 10, length: 20, depth: 5, rotation: 90,
-              xpos: 10, ypos: 20, zpos: 0, setup_start_time: Time.zone.now,
-              setup_end_time: Time.zone.now + 1.hour, breakdown_start_time: Time.zone.now + 3.hours,
-              breakdown_end_time: Time.zone.now + 4.hours)
+                           xpos: 10, ypos: 20, zpos: 0, setup_start_time: Time.zone.now,
+                           setup_end_time: Time.zone.now + 1.hour, breakdown_start_time: Time.zone.now + 3.hours,
+                           breakdown_end_time: Time.zone.now + 4.hours)
         step.items.create!(name: 'Item 2', model: 'Model 2', width: 15, length: 25, depth: 10, rotation: 45,
-              xpos: 15, ypos: 25, zpos: 5, setup_start_time: Time.zone.now,
-              setup_end_time: Time.zone.now + 1.hour, breakdown_start_time: Time.zone.now + 3.hours,
-              breakdown_end_time: Time.zone.now + 4.hours)
-        
+                           xpos: 15, ypos: 25, zpos: 5, setup_start_time: Time.zone.now,
+                           setup_end_time: Time.zone.now + 1.hour, breakdown_start_time: Time.zone.now + 3.hours,
+                           breakdown_end_time: Time.zone.now + 4.hours)
+
         allow(File).to receive(:write)
         get :preview3d, params: { id: 0 }
         expect(File).to have_received(:write).with(file_path, anything)
       end
     end
   end
-
 end

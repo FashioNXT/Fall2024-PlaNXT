@@ -3,7 +3,7 @@
 Rails.application.routes.draw do
   # Favicon route to prevent errors
   get '/favicon.ico', to: proc { [204, {}, []] }
-  
+
   resources :items do
     collection do
       get :search # Defines a route for the search action on items controller.
@@ -17,7 +17,6 @@ Rails.application.routes.draw do
 
   # Not sure if this is right, need to reconcile with how you did it -Louis
   get 'plans/:id/preview3d', to: 'plans#preview3d'
-
 
   resources :steps
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
@@ -56,7 +55,6 @@ Rails.application.routes.draw do
   # end
 
   get 'download_all_data', to: 'plans#download_all_data', as: 'download_all_data'
-
 
   # config/routes.rb
   post '/upload_existing_plan', to: 'plans#upload_existing_plan' # Defines a route for the upload_existing_plan action on plans controller.

@@ -11,9 +11,9 @@ class ItemsController < ApplicationController
 
     if @item.save
       if params[:item][:dependencies].present?
-        dependency_ids = params[:item][:dependencies].map(&:to_i) 
+        dependency_ids = params[:item][:dependencies].map(&:to_i)
         dependencies = Item.where(id: dependency_ids)
-      
+
         # Assign the dependencies
         @item.dependencies = dependencies
       end
@@ -27,17 +27,17 @@ class ItemsController < ApplicationController
 
   def update
     @item = Item.find(params[:id])
-  
+
     # Assign dependencies if present
     if params[:item][:dependencies].present?
       dependency_ids = params[:item][:dependencies].map(&:to_i)
       dependency_items = Item.where(id: dependency_ids)
-  
+
       # Update the item attributes first
       if @item.update(item_params.except(:dependencies)) # Ensure dependencies are excluded
         # Assign dependencies to the item
         @item.dependencies = dependency_items
-  
+
         if @item.save
           render json: { status: 'success', item: @item }, status: :ok
         else
@@ -46,13 +46,11 @@ class ItemsController < ApplicationController
       else
         render json: { status: 'error', message: @item.errors.full_messages }, status: :unprocessable_entity
       end
-    else
+    elsif @item.update(item_params)
       # No dependencies provided, just update the item normally
-      if @item.update(item_params)
-        render json: { status: 'success', item: @item }, status: :ok
-      else
-        render json: { status: 'error', message: @item.errors.full_messages }, status: :unprocessable_entity
-      end
+      render json: { status: 'success', item: @item }, status: :ok
+    else
+      render json: { status: 'error', message: @item.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -92,7 +90,6 @@ class ItemsController < ApplicationController
   end
 
   private
-  
 
   # Use callbacks to share common setup or constraints between actions.
   def set_item

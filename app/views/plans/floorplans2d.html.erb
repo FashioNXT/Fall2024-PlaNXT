@@ -386,14 +386,29 @@
     // })
     // }
 
-    function getCategory(itemName) {
-      if (itemTemplates[itemName] && itemTemplates[itemName].category) {
-        return itemTemplates[itemName].category;
-      } else {
-        console.warn(`Category not found for item: ${itemName}`);
-        return null;
+    function getCategory(item) {
+      // Try to match the category based on displayName
+      const matchByName = Object.values(itemTemplates).find(
+        (template) => template.displayName === item.name.replace(/\s+/g, '')
+      );
+
+      if (matchByName) {
+        return matchByName.category;
       }
-    }
+
+      // Try to match the category based on model
+      const matchByModel = Object.values(itemTemplates).find(
+        (template) => template.model === item.model
+      );
+
+      if (matchByModel) {
+        return matchByModel.category;
+      }
+
+      // If no match is found, log a warning
+      console.warn(`Category not found for item: ${item.getName() || item.model}`);
+      return null;
+    }    
 
     // Layer checkboxes
     layerCheckboxes = {
@@ -437,7 +452,7 @@
 
           if (setupStartT <= current_time && current_time <= breakdownEndT){
             // Check if the layer checkbox for this item is checked
-            const layer = getCategory(item.name.replace(/\s+/g, ''));
+            const layer = getCategory(item);
             if (layerCheckboxes[layer] && layerCheckboxes[layer].checked) {
               createItem(droppedElementId, item);
             }

@@ -120,10 +120,10 @@ class ItemsController < ApplicationController
     visited.add(item.id)
 
     # Calculate the time differences for start and end times
-    setup_start_time_diff = updated_times[:setup_start_time] - original_times[:setup_start_time]
-    setup_end_time_diff = updated_times[:setup_end_time] - original_times[:setup_end_time]
-    breakdown_start_time_diff = updated_times[:breakdown_start_time] - original_times[:breakdown_start_time]
-    breakdown_end_time_diff = updated_times[:breakdown_end_time] - original_times[:breakdown_end_time]
+    setup_start_time_diff = (updated_times[:setup_start_time] || 0) - (original_times[:setup_start_time] || 0)
+    setup_end_time_diff = (updated_times[:setup_end_time] || 0) - (original_times[:setup_end_time] || 0)
+    breakdown_start_time_diff = (updated_times[:breakdown_start_time] || 0) - (original_times[:breakdown_start_time] || 0)
+    breakdown_end_time_diff = (updated_times[:breakdown_end_time] || 0) - (original_times[:breakdown_end_time] || 0)
 
     setup_time_diff = setup_start_time_diff + (setup_end_time_diff - setup_start_time_diff)
     breakdown_time_diff = breakdown_start_time_diff + (breakdown_end_time_diff - breakdown_start_time_diff)

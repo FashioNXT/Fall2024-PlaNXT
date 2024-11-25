@@ -154,3 +154,9 @@ To do this, go to https://events360.herokuapp.com/users and login as the admin u
 
 5. Add postgres under resources tab on Heroku
 
+## Team Contact
+Ankitha Prasad <ankithap@tamu.edu>
+Mahima Ganni <mahima333@tamu.edu>
+Govind Joshi <gvj84@tamu.edu>
+Sai Rohit <saisivarohith@tamu.edu>
+

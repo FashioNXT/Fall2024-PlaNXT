@@ -124,7 +124,6 @@ press view
 skip next section to the final section of the readme
 
 
-Just keeping the steps below just in case but it does not work for Alex 
 
 In your project terminal:
 ```
@@ -137,6 +136,8 @@ heroku git:remote -a <project_name>
 git add .
 git commit -m "my first commit"
 git push heroku main
+
+# Attach postgres database in heroku
 heroku run rails db:migrate
 ```
 When goes to the deployment website and click the "Continue with Event360" button, it will shows an error page. This is because you have connected your deployed app to the CRM system.

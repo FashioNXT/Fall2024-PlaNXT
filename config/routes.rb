@@ -16,7 +16,7 @@ Rails.application.routes.draw do
   end
 
   # Not sure if this is right, need to reconcile with how you did it -Louis
-  get 'plans/:id/preview3d', to: 'plans#preview3d'
+  get 'plans/:id/preview3d/:current_step', to: 'plans#preview3d'
 
   resources :steps
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

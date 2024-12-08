@@ -45438,7 +45438,7 @@ Item.prototype.clickReleased = function(intersection) {
     if (this.error) {
         this.hideError();
     }
-
+	
 	fetch(`/items/${this.metadata.item_id}`, {
 		method: 'PUT',
 		headers: {
@@ -47120,7 +47120,7 @@ var Scene = function(model, textureDir) {
     );
   }
 
-  this.addItemClicked = function(itemType, fileName, metadata, venue_start, venue_end, position, scale, rotation, fixed) {
+  this.addItemClicked = function(itemType, fileName, metadata, step_id, venue_start, venue_end, position, scale, rotation, fixed) {
 
 	//--------------------------------------------------------------------
 	// const createModal = new bootstrap.Modal(document.getElementById('createModal'));
@@ -47203,12 +47203,17 @@ var Scene = function(model, textureDir) {
 				xpos: xpos/31.4,
 				ypos: 0,
 				zpos: zpos/31.4,
-				step_id: 1 ,
+				step_id: step_id,
 				setup_start_time: setupStartTime,
 				setup_end_time: setupEndTime,
 				breakdown_start_time: breakdownStartTime,
 				breakdown_end_time: breakdownEndTime,
 			};
+
+			item.metadata.setup_start = setupStartTime;
+			item.metadata.setup_end = setupEndTime;
+			item.metadata.breakdown_start =  breakdownStartTime;
+			item.metadata.breakdown_end = breakdownEndTime;
 
 			fetch(`/items`, {
 			method: 'POST',
@@ -47226,6 +47231,16 @@ var Scene = function(model, textureDir) {
 			.then(data => {
 				console.log("Item added successfully with ID:", data.id);
 				item.metadata.item_id = data.id;
+				item.fixed = fixed || false;
+				console.log("newww items1")
+				items.push(item);
+				console.log("newww items2")
+				scope.add(item);
+				console.log("newww items3")
+				item.initObject();
+				console.log("newww items")
+				console.log(items)
+				scope.itemLoadedCallbacks.fire(item);
 			})
 			.catch((error) => {
 			console.error('Error updating item:', error);
@@ -47236,11 +47251,7 @@ var Scene = function(model, textureDir) {
 			document.getElementById('createModal').style.display = 'none';
 		};
 	//-------------------------------------------------------------------
-			item.fixed = fixed || false;
-			items.push(item);
-			scope.add(item);
-			item.initObject();
-			scope.itemLoadedCallbacks.fire(item);
+			
 
 	}
 
@@ -47250,8 +47261,6 @@ var Scene = function(model, textureDir) {
       loaderCallback,
       textureDir
     );
-
-
   }
 
   // Copied from model.newRoom

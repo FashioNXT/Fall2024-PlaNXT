@@ -811,7 +811,7 @@
 
         // // Construct the full URL
         const plan_id = <%= @plan.id %>
-        const url = `/plans/${plan_id}/preview3d`;
+        const url = `/plans/${plan_id}/preview3d/${currentStep}`;
 
         // Navigate to the URL
         window.open(url, "_blank");

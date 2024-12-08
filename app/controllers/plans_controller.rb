@@ -123,7 +123,7 @@ class PlansController < ApplicationController
     }
 
     json_content['step_id'] = {
-      'step_id' => @plan.steps.first.items[0].step_id
+      'step_id' => params[:current_step]
     }
 
     # Update the corners of the floorplan

@@ -356,6 +356,10 @@ var SideMenu = function(room3d, floorplanControls, modalEffects) {
         model_url: modelUrl,
         item_type: itemType,
         item_id: 0,
+        setup_start: null,
+        setup_end: null,
+        breakdown_start: null,
+        breakdown_end: null,
       }
       let fullFloorplanObj = null;
       fetch("../../../floorplan.json")
@@ -364,7 +368,8 @@ var SideMenu = function(room3d, floorplanControls, modalEffects) {
           fullFloorplanObj = json;
           venue_start = fullFloorplanObj.timeline.start_time;
           venue_end = fullFloorplanObj.timeline.end_time;
-          room3d.model.scene.addItemClicked(itemType, modelUrl, metadata, venue_start, venue_end);  
+          step_id = fullFloorplanObj.step_id.step_id
+          room3d.model.scene.addItemClicked(itemType, modelUrl, metadata, step_id, venue_start, venue_end);  
           setCurrentState(scope.states.DEFAULT);
         });
     });
@@ -601,6 +606,9 @@ $(document).ready(function() {
     // console.log(minsToMs(timelineBar.value), startTime.getTime())
     // console.log(currTime)
 
+    // console.log(room3d.model.scene.getItems());
+    // console.log(this);
+
 
     room3d.model.scene.getItems().forEach((item) => {
 
@@ -609,6 +617,7 @@ $(document).ready(function() {
 
       // Each 'Item' object 'inherits' from THREE.Mesh, which has a 'visible'
       // property which can be used for toggling the visibility of an obj
+      console.log(item, item.visible, currTime, setupStart, breakdownEnd)
       item.visible = currTime >= setupStart && currTime <= breakdownEnd
     })
 

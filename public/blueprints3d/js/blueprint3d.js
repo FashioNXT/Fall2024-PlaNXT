@@ -47173,10 +47173,10 @@ var Scene = function(model, textureDir) {
 				var depth = document.getElementById('createItemDepth').value;
 				var rotation = document.getElementById('createItemRotation').value;
 				var description = document.getElementById('createItemDescription').value;
-				var setupStartTime = document.getElementById('createItemSetupStartTime').value + ":00";
-				var setupEndTime = document.getElementById('createItemSetupEndTime').value + ":00";
-				var breakdownStartTime = document.getElementById('createItemBreakdownStartTime').value + ":00";
-				var breakdownEndTime = document.getElementById('createItemBreakdownEndTime').value + ":00";
+				var setupStartTime = document.getElementById('createItemSetupStartTime').value + ":00Z";
+				var setupEndTime = document.getElementById('createItemSetupEndTime').value + ":00Z";
+				var breakdownStartTime = document.getElementById('createItemBreakdownStartTime').value + ":00Z";
+				var breakdownEndTime = document.getElementById('createItemBreakdownEndTime').value + ":00Z";
 				var inch2feet = 1/12;
 		
 				console.log(setupStartTime);
